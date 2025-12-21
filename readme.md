@@ -14,7 +14,7 @@
 
 ---
 
-### Note : The Test results that are incldued in the Readme file are just placeholder, for actual test resutls of the architecture refer the test results in each layer.
+### Note : The Test results that are incldued in the Readme file are just placeholders, for actual test resutls of the architecture refer the test results in each layer.
 ## 📋 Table of Contents
 
 - [Abstract](#-abstract)
