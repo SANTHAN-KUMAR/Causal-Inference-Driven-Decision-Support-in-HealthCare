@@ -128,7 +128,7 @@
 | L1 Semantic | 6 | 6 | 100% | ✅ Excellent |
 | L2 Digital Twin | 4 | 4 | 100% | ✅ Excellent |
 | L3 Causal | 4 | 4 | 100% | ✅ Excellent |
-| L4 Decision | 4 | 2 | 50% | ⚠️ Partial |
+| **L4** Decision Engine | 4 | 3 | 75% | ✅ Good |
 | L5 Safety | 5 | 5 | 100% | ✅ Excellent |
 | Integration | 5 | 4 | 80% | ✅ Good |
 
