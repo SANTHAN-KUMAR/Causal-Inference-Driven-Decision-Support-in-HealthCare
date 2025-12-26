@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AEGIS 3.0 | N-of-1 Precision Medicine Platform</title>
+    <meta name="description"
+        content="Adaptive Engineering for Generalized Individualized Safety - Live Clinical Decision Support">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <div id="app" class="app">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <svg class="logo-icon" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="16" cy="16" r="14" stroke="currentColor" stroke-width="1.5" />
+                        <path d="M16 6L22 24H10L16 6Z" fill="currentColor" opacity="0.8" />
+                        <circle cx="16" cy="16" r="4" fill="currentColor" />
+                    </svg>
+                    <div class="logo-text">
+                        <span class="logo-title">AEGIS</span>
+                        <span class="logo-version">v3.0 Live</span>
+                    </div>
+                </div>
+            </div>
+
+            <nav class="nav">
+                <a href="#" class="nav-link active" data-section="input">
+                    <svg class="nav-icon" viewBox="0 0 20 20" fill="currentColor">
+                        <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z" />
+                        <path fill-rule="evenodd"
+                            d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z"
+                            clip-rule="evenodd" />
+                    </svg>
+                    <span>Patient Input</span>
+                </a>
+                <a href="#" class="nav-link" data-section="processing">
+                    <svg class="nav-icon" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd"
+                            d="M11.49 3.17c-.38-1.56-2.6-1.56-2.98 0a1.532 1.532 0 01-2.286.948c-1.372-.836-2.942.734-2.106 2.106.54.886.061 2.042-.947 2.287-1.561.379-1.561 2.6 0 2.978a1.532 1.532 0 01.947 2.287c-.836 1.372.734 2.942 2.106 2.106a1.532 1.532 0 012.287.947c.379 1.561 2.6 1.561 2.978 0a1.533 1.533 0 012.287-.947c1.372.836 2.942-.734 2.106-2.106a1.533 1.533 0 01.947-2.287c1.561-.379 1.561-2.6 0-2.978a1.532 1.532 0 01-.947-2.287c.836-1.372-.734-2.942-2.106-2.106a1.532 1.532 0 01-2.287-.947zM10 13a3 3 0 100-6 3 3 0 000 6z"
+                            clip-rule="evenodd" />
+                    </svg>
+                    <span>Layer Processing</span>
+                </a>
+                <a href="#" class="nav-link" data-section="results">
+                    <svg class="nav-icon" viewBox="0 0 20 20" fill="currentColor">
+                        <path d="M2 10a8 8 0 018-8v8h8a8 8 0 11-16 0z" />
+                        <path d="M12 2.252A8.014 8.014 0 0117.748 8H12V2.252z" />
+                    </svg>
+                    <span>Results</span>
+                </a>
+                <a href="#" class="nav-link" data-section="simulation">
+                    <svg class="nav-icon" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd"
+                            d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z"
+                            clip-rule="evenodd" />
+                    </svg>
+                    <span>Batch Simulation</span>
+                </a>
+            </nav>
+
+            <div class="sidebar-footer">
+                <div class="system-status">
+                    <span class="status-dot" id="system-status-dot"></span>
+                    <span class="status-text" id="system-status-text">Awaiting Input</span>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main">
+            <header class="header">
+                <div class="header-title">
+                    <h1 id="page-title">Patient Data Input</h1>
+                    <p class="header-subtitle">Enter patient data for real-time AEGIS processing</p>
+                </div>
+                <div class="header-actions">
+                    <button class="btn btn-secondary" id="reset-system">Reset System</button>
+                    <button class="btn btn-danger" id="emergency-stop">Emergency Stop</button>
+                </div>
+            </header>
+
+            <div class="content">
+                <!-- Patient Input Section -->
+                <section id="input-section" class="section active">
+                    <div class="input-layout">
+                        <!-- Patient Profile -->
+                        <div class="panel">
+                            <h3 class="panel-title">Patient Profile</h3>
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label>Patient ID</label>
+                                    <input type="text" id="patient-id" value="PAT-001" class="form-input">
+                                </div>
+                                <div class="form-group">
+                                    <label>Body Weight (kg)</label>
+                                    <input type="number" id="patient-weight" value="75" min="20" max="200"
+                                        class="form-input">
+                                </div>
+                                <div class="form-group">
+                                    <label>Total Daily Insulin (U)</label>
+                                    <input type="number" id="patient-tdi" value="45" min="5" max="150"
+                                        class="form-input">
+                                </div>
+                                <div class="form-group">
+                                    <label>Diabetes Duration (years)</label>
+                                    <input type="number" id="patient-duration" value="5" min="0" max="50"
+                                        class="form-input">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Current Glucose Reading -->
+                        <div class="panel">
+                            <h3 class="panel-title">Current CGM Reading</h3>
+                            <p class="panel-desc">Enter the latest glucose value from your CGM sensor</p>
+                            <div class="glucose-input-container">
+                                <input type="number" id="current-glucose" value="120" min="40" max="400"
+                                    class="glucose-input">
+                                <span class="glucose-unit">mg/dL</span>
+                            </div>
+                            <div class="form-group" style="margin-top: 16px;">
+                                <label>Glucose Trend</label>
+                                <select id="glucose-trend" class="form-select">
+                                    <option value="stable">Stable</option>
+                                    <option value="rising_slow">Rising Slowly</option>
+                                    <option value="rising_fast">Rising Fast</option>
+                                    <option value="falling_slow">Falling Slowly</option>
+                                    <option value="falling_fast">Falling Fast</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Meal Entry -->
+                        <div class="panel">
+                            <h3 class="panel-title">Meal Entry</h3>
+                            <p class="panel-desc">Log upcoming or recent meal</p>
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label>Carbohydrates (grams)</label>
+                                    <input type="number" id="meal-carbs" value="45" min="0" max="200"
+                                        class="form-input">
+                                </div>
+                                <div class="form-group">
+                                    <label>Meal Type</label>
+                                    <select id="meal-type" class="form-select">
+                                        <option value="breakfast">Breakfast</option>
+                                        <option value="lunch">Lunch</option>
+                                        <option value="dinner">Dinner</option>
+                                        <option value="snack">Snack</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>Glycemic Index</label>
+                                    <select id="meal-gi" class="form-select">
+                                        <option value="low">Low GI</option>
+                                        <option value="medium" selected>Medium GI</option>
+                                        <option value="high">High GI</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>Fat Content</label>
+                                    <select id="meal-fat" class="form-select">
+                                        <option value="low">Low Fat</option>
+                                        <option value="medium" selected>Medium Fat</option>
+                                        <option value="high">High Fat</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Patient Diary -->
+                        <div class="panel">
+                            <h3 class="panel-title">Patient Diary Entry</h3>
+                            <p class="panel-desc">Describe how you're feeling, activities, stress, sleep quality, etc.
+                                This will be processed by Layer 1 (Semantic Sensorium).</p>
+                            <textarea id="diary-entry" class="form-textarea" rows="4"
+                                placeholder="Example: Had a stressful meeting this morning. Slept poorly last night. Planning to go for a 30-minute walk after lunch."></textarea>
+                        </div>
+
+                        <!-- Activity/Context -->
+                        <div class="panel">
+                            <h3 class="panel-title">Current Context</h3>
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label>Physical Activity</label>
+                                    <select id="activity-level" class="form-select">
+                                        <option value="sedentary">Sedentary</option>
+                                        <option value="light" selected>Light Activity</option>
+                                        <option value="moderate">Moderate Exercise</option>
+                                        <option value="intense">Intense Exercise</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>Stress Level</label>
+                                    <select id="stress-level" class="form-select">
+                                        <option value="low">Low</option>
+                                        <option value="normal" selected>Normal</option>
+                                        <option value="elevated">Elevated</option>
+                                        <option value="high">High</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>Sleep Quality (last night)</label>
+                                    <select id="sleep-quality" class="form-select">
+                                        <option value="poor">Poor</option>
+                                        <option value="fair">Fair</option>
+                                        <option value="good" selected>Good</option>
+                                        <option value="excellent">Excellent</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>Illness/Symptoms</label>
+                                    <select id="illness" class="form-select">
+                                        <option value="none" selected>None</option>
+                                        <option value="mild_cold">Mild Cold</option>
+                                        <option value="fever">Fever</option>
+                                        <option value="infection">Active Infection</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Action Buttons -->
+                        <div class="action-bar">
+                            <button class="btn btn-primary btn-lg" id="process-data">
+                                Process Through AEGIS Layers
+                            </button>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Layer Processing Section -->
+                <section id="processing-section" class="section">
+                    <div class="processing-layout">
+                        <div class="layer-pipeline">
+                            <!-- Layer 1 -->
+                            <div class="layer-block" id="layer-1-block">
+                                <div class="layer-header">
+                                    <div class="layer-badge">L1</div>
+                                    <div class="layer-title">
+                                        <h3>Semantic Sensorium</h3>
+                                        <p>SNOMED-CT extraction, semantic entropy, proxy identification</p>
+                                    </div>
+                                    <div class="layer-status-badge" id="l1-badge">Pending</div>
+                                </div>
+                                <div class="layer-output" id="l1-output">
+                                    <div class="output-placeholder">Awaiting input data...</div>
+                                </div>
+                            </div>
+
+                            <!-- Layer 2 -->
+                            <div class="layer-block" id="layer-2-block">
+                                <div class="layer-header">
+                                    <div class="layer-badge">L2</div>
+                                    <div class="layer-title">
+                                        <h3>Adaptive Digital Twin</h3>
+                                        <p>UDE state estimation, AC-UKF/RBPF, regime detection</p>
+                                    </div>
+                                    <div class="layer-status-badge" id="l2-badge">Pending</div>
+                                </div>
+                                <div class="layer-output" id="l2-output">
+                                    <div class="output-placeholder">Awaiting L1 output...</div>
+                                </div>
+                            </div>
+
+                            <!-- Layer 3 -->
+                            <div class="layer-block" id="layer-3-block">
+                                <div class="layer-header">
+                                    <div class="layer-badge">L3</div>
+                                    <div class="layer-title">
+                                        <h3>Causal Inference Engine</h3>
+                                        <p>Harmonic G-Estimation, proximal adjustment</p>
+                                    </div>
+                                    <div class="layer-status-badge" id="l3-badge">Pending</div>
+                                </div>
+                                <div class="layer-output" id="l3-output">
+                                    <div class="output-placeholder">Awaiting L2 output...</div>
+                                </div>
+                            </div>
+
+                            <!-- Layer 4 -->
+                            <div class="layer-block" id="layer-4-block">
+                                <div class="layer-header">
+                                    <div class="layer-badge">L4</div>
+                                    <div class="layer-title">
+                                        <h3>Decision Engine</h3>
+                                        <p>Action-Centered Bandits, Counterfactual Thompson Sampling</p>
+                                    </div>
+                                    <div class="layer-status-badge" id="l4-badge">Pending</div>
+                                </div>
+                                <div class="layer-output" id="l4-output">
+                                    <div class="output-placeholder">Awaiting L3 output...</div>
+                                </div>
+                            </div>
+
+                            <!-- Layer 5 -->
+                            <div class="layer-block" id="layer-5-block">
+                                <div class="layer-header">
+                                    <div class="layer-badge safety">L5</div>
+                                    <div class="layer-title">
+                                        <h3>Simplex Safety Supervisor</h3>
+                                        <p>3-tier verification: Reflex, STL Monitor, Seldonian</p>
+                                    </div>
+                                    <div class="layer-status-badge" id="l5-badge">Pending</div>
+                                </div>
+                                <div class="layer-output" id="l5-output">
+                                    <div class="output-placeholder">Awaiting L4 output...</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Results Section -->
+                <section id="results-section" class="section">
+                    <div class="results-layout">
+                        <div class="results-empty" id="results-empty">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="empty-icon">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                                    d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                            </svg>
+                            <h3>No Results Yet</h3>
+                            <p>Process patient data through AEGIS layers to see treatment recommendations.</p>
+                            <button class="btn btn-primary" onclick="navigateToSection('input')">Enter Patient
+                                Data</button>
+                        </div>
+
+                        <div class="results-content hidden" id="results-data">
+                            <!-- Treatment Recommendation -->
+                            <div class="result-card primary">
+                                <h3>Treatment Recommendation</h3>
+                                <div class="recommendation-display">
+                                    <div class="rec-main">
+                                        <span class="rec-label">Recommended Bolus</span>
+                                        <span class="rec-value" id="rec-bolus">--</span>
+                                        <span class="rec-unit">Units</span>
+                                    </div>
+                                    <div class="rec-breakdown">
+                                        <div class="rec-item">
+                                            <span>Meal Coverage</span>
+                                            <span id="rec-meal-dose">--</span>
+                                        </div>
+                                        <div class="rec-item">
+                                            <span>Correction Dose</span>
+                                            <span id="rec-correction">--</span>
+                                        </div>
+                                        <div class="rec-item">
+                                            <span>Context Adjustment</span>
+                                            <span id="rec-adjustment">--</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="rec-confidence">
+                                    <span>Confidence Interval (95%):</span>
+                                    <span id="rec-ci">--</span>
+                                </div>
+                            </div>
+
+                            <!-- Safety Verification -->
+                            <div class="result-card">
+                                <h3>Safety Verification (L5)</h3>
+                                <div class="safety-tiers">
+                                    <div class="safety-tier" id="tier-1-result">
+                                        <div class="tier-header">
+                                            <span class="tier-name">Tier 1: Reflex Controller</span>
+                                            <span class="tier-status">--</span>
+                                        </div>
+                                        <p class="tier-detail">Model-free safety bounds</p>
+                                    </div>
+                                    <div class="safety-tier" id="tier-2-result">
+                                        <div class="tier-header">
+                                            <span class="tier-name">Tier 2: STL Monitor</span>
+                                            <span class="tier-status">--</span>
+                                        </div>
+                                        <p class="tier-detail">Signal Temporal Logic verification</p>
+                                    </div>
+                                    <div class="safety-tier" id="tier-3-result">
+                                        <div class="tier-header">
+                                            <span class="tier-name">Tier 3: Seldonian</span>
+                                            <span class="tier-status">--</span>
+                                        </div>
+                                        <p class="tier-detail">Probabilistic constraint satisfaction</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Predicted Outcomes -->
+                            <div class="result-card">
+                                <h3>Predicted Glucose Trajectory</h3>
+                                <div class="chart-container-small">
+                                    <canvas id="prediction-chart"></canvas>
+                                </div>
+                                <div class="prediction-metrics">
+                                    <div class="pred-metric">
+                                        <span class="pred-label">Predicted Peak</span>
+                                        <span class="pred-value" id="pred-peak">--</span>
+                                    </div>
+                                    <div class="pred-metric">
+                                        <span class="pred-label">Time to Peak</span>
+                                        <span class="pred-value" id="pred-time-peak">--</span>
+                                    </div>
+                                    <div class="pred-metric">
+                                        <span class="pred-label">Return to Target</span>
+                                        <span class="pred-value" id="pred-return">--</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Causal Analysis -->
+                            <div class="result-card">
+                                <h3>Causal Effect Analysis (L3)</h3>
+                                <div class="causal-display">
+                                    <div class="causal-main">
+                                        <span class="causal-label">Individual Treatment Effect</span>
+                                        <span class="causal-value" id="causal-tau">--</span>
+                                        <span class="causal-unit">mg/dL per Unit</span>
+                                    </div>
+                                    <div class="causal-details">
+                                        <div class="causal-item">
+                                            <span>Population Average</span>
+                                            <span id="causal-pop">-25 mg/dL/U</span>
+                                        </div>
+                                        <div class="causal-item">
+                                            <span>Individual Deviation</span>
+                                            <span id="causal-dev">--</span>
+                                        </div>
+                                        <div class="causal-item">
+                                            <span>Confounding Adjustment</span>
+                                            <span id="causal-adj">--</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Action Buttons -->
+                            <div class="result-actions">
+                                <button class="btn btn-success" id="approve-recommendation">Approve
+                                    Recommendation</button>
+                                <button class="btn btn-secondary" id="modify-dose">Modify Dose</button>
+                                <button class="btn btn-outline" id="reject-recommendation">Reject / Manual
+                                    Override</button>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Batch Simulation Section -->
+                <section id="simulation-section" class="section">
+                    <div class="simulation-layout">
+                        <div class="panel">
+                            <h3 class="panel-title">Batch Simulation</h3>
+                            <p class="panel-desc">Run a multi-hour simulation with synthetic data to test system
+                                performance.</p>
+
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label>Virtual Patient</label>
+                                    <select id="sim-patient" class="form-select">
+                                        <option value="adult_avg">Adult Average (75kg, 45U TDI)</option>
+                                        <option value="adult_high_ir">Adult High Insulin Resistance</option>
+                                        <option value="adult_sensitive">Adult Insulin Sensitive</option>
+                                        <option value="adolescent">Adolescent (52kg, 32U TDI)</option>
+                                        <option value="child">Child (30kg, 16U TDI)</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>Duration</label>
+                                    <select id="sim-duration" class="form-select">
+                                        <option value="6">6 Hours</option>
+                                        <option value="12">12 Hours</option>
+                                        <option value="24" selected>24 Hours</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>Meal Scenario</label>
+                                    <select id="sim-meals" class="form-select">
+                                        <option value="standard">Standard (3 meals)</option>
+                                        <option value="high_carb">High Carb Challenge</option>
+                                        <option value="low_carb">Low Carb</option>
+                                        <option value="irregular">Irregular Timing</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>Challenge Scenario</label>
+                                    <select id="sim-challenge" class="form-select">
+                                        <option value="none">Normal Day</option>
+                                        <option value="exercise">With Exercise</option>
+                                        <option value="stress">High Stress</option>
+                                        <option value="illness">Mild Illness</option>
+                                        <option value="dawn">Dawn Phenomenon</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <button class="btn btn-primary btn-block" id="run-batch-sim">Run Batch Simulation</button>
+                        </div>
+
+                        <div class="panel simulation-results" id="sim-results-panel">
+                            <h3 class="panel-title">Simulation Results</h3>
+                            <div class="sim-status-display" id="sim-status-display">
+                                <p>Configure parameters and click "Run Batch Simulation"</p>
+                            </div>
+                            <div class="sim-chart-container hidden" id="sim-chart-container">
+                                <canvas id="sim-chart"></canvas>
+                            </div>
+                            <div class="sim-metrics hidden" id="sim-metrics">
+                                <div class="sim-metric">
+                                    <span class="metric-label">Time in Range (70-180)</span>
+                                    <span class="metric-value" id="sim-tir">--</span>
+                                </div>
+                                <div class="sim-metric">
+                                    <span class="metric-label">Time Below 70</span>
+                                    <span class="metric-value" id="sim-tbr">--</span>
+                                </div>
+                                <div class="sim-metric">
+                                    <span class="metric-label">Severe Hypo (&lt;54)</span>
+                                    <span class="metric-value" id="sim-hypo">--</span>
+                                </div>
+                                <div class="sim-metric">
+                                    <span class="metric-label">Time Above 180</span>
+                                    <span class="metric-value" id="sim-tar">--</span>
+                                </div>
+                                <div class="sim-metric">
+                                    <span class="metric-label">Mean Glucose</span>
+                                    <span class="metric-value" id="sim-mean">--</span>
+                                </div>
+                                <div class="sim-metric">
+                                    <span class="metric-label">CV%</span>
+                                    <span class="metric-value" id="sim-cv">--</span>
+                                </div>
+                                <div class="sim-metric">
+                                    <span class="metric-label">Safety Violations</span>
+                                    <span class="metric-value" id="sim-violations">--</span>
+                                </div>
+                                <div class="sim-metric">
+                                    <span class="metric-label">Decisions Made</span>
+                                    <span class="metric-value" id="sim-decisions">--</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </main>
+    </div>
+
+    <div id="toast-container" class="toast-container"></div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+    <script src="aegis-engine.js"></script>
+    <script src="app.js"></script>
+</body>
+
+</html>
