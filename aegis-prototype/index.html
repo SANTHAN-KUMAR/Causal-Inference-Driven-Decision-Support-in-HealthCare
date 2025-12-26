@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AEGIS 3.0 | N-of-1 Precision Medicine Platform</title>
     <meta name="description"
-        content="Adaptive Engineering for Generalized Individualized Safety - Clinical Decision Support System">
+        content="Adaptive Engineering for Generalized Individualized Safety - Live Clinical Decision Support">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
@@ -28,18 +28,35 @@
                     </svg>
                     <div class="logo-text">
                         <span class="logo-title">AEGIS</span>
-                        <span class="logo-version">v3.0</span>
+                        <span class="logo-version">v3.0 Live</span>
                     </div>
                 </div>
             </div>
 
             <nav class="nav">
-                <a href="#" class="nav-link active" data-section="dashboard">
+                <a href="#" class="nav-link active" data-section="input">
                     <svg class="nav-icon" viewBox="0 0 20 20" fill="currentColor">
-                        <path
-                            d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zm0 6a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1v-6zm11-1a1 1 0 00-1 1v6a1 1 0 001 1h2a1 1 0 001-1v-6a1 1 0 00-1-1h-2z" />
+                        <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z" />
+                        <path fill-rule="evenodd"
+                            d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z"
+                            clip-rule="evenodd" />
                     </svg>
-                    <span>Dashboard</span>
+                    <span>Patient Input</span>
+                </a>
+                <a href="#" class="nav-link" data-section="processing">
+                    <svg class="nav-icon" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd"
+                            d="M11.49 3.17c-.38-1.56-2.6-1.56-2.98 0a1.532 1.532 0 01-2.286.948c-1.372-.836-2.942.734-2.106 2.106.54.886.061 2.042-.947 2.287-1.561.379-1.561 2.6 0 2.978a1.532 1.532 0 01.947 2.287c-.836 1.372.734 2.942 2.106 2.106a1.532 1.532 0 012.287.947c.379 1.561 2.6 1.561 2.978 0a1.533 1.533 0 012.287-.947c1.372.836 2.942-.734 2.106-2.106a1.533 1.533 0 01.947-2.287c1.561-.379 1.561-2.6 0-2.978a1.532 1.532 0 01-.947-2.287c.836-1.372-.734-2.942-2.106-2.106a1.532 1.532 0 01-2.287-.947zM10 13a3 3 0 100-6 3 3 0 000 6z"
+                            clip-rule="evenodd" />
+                    </svg>
+                    <span>Layer Processing</span>
+                </a>
+                <a href="#" class="nav-link" data-section="results">
+                    <svg class="nav-icon" viewBox="0 0 20 20" fill="currentColor">
+                        <path d="M2 10a8 8 0 018-8v8h8a8 8 0 11-16 0z" />
+                        <path d="M12 2.252A8.014 8.014 0 0117.748 8H12V2.252z" />
+                    </svg>
+                    <span>Results</span>
                 </a>
                 <a href="#" class="nav-link" data-section="simulation">
                     <svg class="nav-icon" viewBox="0 0 20 20" fill="currentColor">
@@ -47,29 +64,14 @@
                             d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z"
                             clip-rule="evenodd" />
                     </svg>
-                    <span>Run Simulation</span>
-                </a>
-                <a href="#" class="nav-link" data-section="architecture">
-                    <svg class="nav-icon" viewBox="0 0 20 20" fill="currentColor">
-                        <path
-                            d="M3 3a1 1 0 000 2v8a2 2 0 002 2h2.586l-1.293 1.293a1 1 0 101.414 1.414L10 15.414l2.293 2.293a1 1 0 001.414-1.414L12.414 15H15a2 2 0 002-2V5a1 1 0 100-2H3zm11.707 4.707a1 1 0 00-1.414-1.414L10 9.586 8.707 8.293a1 1 0 00-1.414 0l-2 2a1 1 0 101.414 1.414L8 10.414l1.293 1.293a1 1 0 001.414 0l4-4z" />
-                    </svg>
-                    <span>Architecture</span>
-                </a>
-                <a href="#" class="nav-link" data-section="validation">
-                    <svg class="nav-icon" viewBox="0 0 20 20" fill="currentColor">
-                        <path fill-rule="evenodd"
-                            d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                            clip-rule="evenodd" />
-                    </svg>
-                    <span>Validation</span>
+                    <span>Batch Simulation</span>
                 </a>
             </nav>
 
             <div class="sidebar-footer">
                 <div class="system-status">
-                    <span class="status-dot"></span>
-                    <span class="status-text">System Ready</span>
+                    <span class="status-dot" id="system-status-dot"></span>
+                    <span class="status-text" id="system-status-text">Awaiting Input</span>
                 </div>
             </div>
         </aside>
@@ -78,538 +80,478 @@
         <main class="main">
             <header class="header">
                 <div class="header-title">
-                    <h1 id="page-title">System Dashboard</h1>
-                    <p class="header-subtitle">N-of-1 Precision Medicine Clinical Decision Support</p>
+                    <h1 id="page-title">Patient Data Input</h1>
+                    <p class="header-subtitle">Enter patient data for real-time AEGIS processing</p>
                 </div>
                 <div class="header-actions">
-                    <button class="btn btn-danger" id="emergency-stop">
-                        <svg viewBox="0 0 20 20" fill="currentColor" class="btn-icon">
-                            <path fill-rule="evenodd"
-                                d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
-                                clip-rule="evenodd" />
-                        </svg>
-                        Emergency Stop
-                    </button>
+                    <button class="btn btn-secondary" id="reset-system">Reset System</button>
+                    <button class="btn btn-danger" id="emergency-stop">Emergency Stop</button>
                 </div>
             </header>
 
             <div class="content">
-                <!-- Dashboard Section -->
-                <section id="dashboard-section" class="section active">
-                    <div class="metrics-grid">
-                        <div class="metric-card">
-                            <div class="metric-header">
-                                <span class="metric-label">Current Glucose</span>
-                                <span class="metric-status status-normal">Normal</span>
-                            </div>
-                            <div class="metric-value" id="current-glucose">--</div>
-                            <div class="metric-unit">mg/dL</div>
-                            <div class="metric-trend" id="glucose-trend">
-                                <span class="trend-direction">--</span>
+                <!-- Patient Input Section -->
+                <section id="input-section" class="section active">
+                    <div class="input-layout">
+                        <!-- Patient Profile -->
+                        <div class="panel">
+                            <h3 class="panel-title">Patient Profile</h3>
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label>Patient ID</label>
+                                    <input type="text" id="patient-id" value="PAT-001" class="form-input">
+                                </div>
+                                <div class="form-group">
+                                    <label>Body Weight (kg)</label>
+                                    <input type="number" id="patient-weight" value="75" min="20" max="200"
+                                        class="form-input">
+                                </div>
+                                <div class="form-group">
+                                    <label>Total Daily Insulin (U)</label>
+                                    <input type="number" id="patient-tdi" value="45" min="5" max="150"
+                                        class="form-input">
+                                </div>
+                                <div class="form-group">
+                                    <label>Diabetes Duration (years)</label>
+                                    <input type="number" id="patient-duration" value="5" min="0" max="50"
+                                        class="form-input">
+                                </div>
                             </div>
                         </div>
-                        <div class="metric-card">
-                            <div class="metric-header">
-                                <span class="metric-label">Time in Range</span>
+
+                        <!-- Current Glucose Reading -->
+                        <div class="panel">
+                            <h3 class="panel-title">Current CGM Reading</h3>
+                            <p class="panel-desc">Enter the latest glucose value from your CGM sensor</p>
+                            <div class="glucose-input-container">
+                                <input type="number" id="current-glucose" value="120" min="40" max="400"
+                                    class="glucose-input">
+                                <span class="glucose-unit">mg/dL</span>
                             </div>
-                            <div class="metric-value" id="tir-value">--</div>
-                            <div class="metric-unit">% (70-180 mg/dL)</div>
+                            <div class="form-group" style="margin-top: 16px;">
+                                <label>Glucose Trend</label>
+                                <select id="glucose-trend" class="form-select">
+                                    <option value="stable">Stable (→)</option>
+                                    <option value="rising_slow">Rising Slowly (↗)</option>
+                                    <option value="rising_fast">Rising Fast (↑↑)</option>
+                                    <option value="falling_slow">Falling Slowly (↘)</option>
+                                    <option value="falling_fast">Falling Fast (↓↓)</option>
+                                </select>
+                            </div>
                         </div>
-                        <div class="metric-card">
-                            <div class="metric-header">
-                                <span class="metric-label">Safety Score</span>
-                                <span class="metric-status status-safe">Verified</span>
+
+                        <!-- Meal Entry -->
+                        <div class="panel">
+                            <h3 class="panel-title">Meal Entry</h3>
+                            <p class="panel-desc">Log upcoming or recent meal</p>
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label>Carbohydrates (grams)</label>
+                                    <input type="number" id="meal-carbs" value="45" min="0" max="200"
+                                        class="form-input">
+                                </div>
+                                <div class="form-group">
+                                    <label>Meal Type</label>
+                                    <select id="meal-type" class="form-select">
+                                        <option value="breakfast">Breakfast</option>
+                                        <option value="lunch">Lunch</option>
+                                        <option value="dinner">Dinner</option>
+                                        <option value="snack">Snack</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>Glycemic Index</label>
+                                    <select id="meal-gi" class="form-select">
+                                        <option value="low">Low GI (&lt;55)</option>
+                                        <option value="medium" selected>Medium GI (55-70)</option>
+                                        <option value="high">High GI (&gt;70)</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>Fat Content</label>
+                                    <select id="meal-fat" class="form-select">
+                                        <option value="low">Low Fat</option>
+                                        <option value="medium" selected>Medium Fat</option>
+                                        <option value="high">High Fat (delayed absorption)</option>
+                                    </select>
+                                </div>
                             </div>
-                            <div class="metric-value" id="safety-score">--</div>
-                            <div class="metric-unit">% Constraint Satisfaction</div>
                         </div>
-                        <div class="metric-card">
-                            <div class="metric-header">
-                                <span class="metric-label">Severe Hypoglycemia</span>
+
+                        <!-- Patient Diary -->
+                        <div class="panel">
+                            <h3 class="panel-title">Patient Diary Entry</h3>
+                            <p class="panel-desc">Describe how you're feeling, activities, stress, sleep quality, etc.
+                                This will be processed by Layer 1 (Semantic Sensorium).</p>
+                            <textarea id="diary-entry" class="form-textarea" rows="4"
+                                placeholder="Example: Had a stressful meeting this morning. Slept poorly last night (about 5 hours). Planning to go for a 30-minute walk after lunch. Feeling a bit anxious about work presentation tomorrow."></textarea>
+                        </div>
+
+                        <!-- Activity/Context -->
+                        <div class="panel">
+                            <h3 class="panel-title">Current Context</h3>
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label>Physical Activity</label>
+                                    <select id="activity-level" class="form-select">
+                                        <option value="sedentary">Sedentary</option>
+                                        <option value="light" selected>Light Activity</option>
+                                        <option value="moderate">Moderate Exercise</option>
+                                        <option value="intense">Intense Exercise</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>Stress Level</label>
+                                    <select id="stress-level" class="form-select">
+                                        <option value="low">Low</option>
+                                        <option value="normal" selected>Normal</option>
+                                        <option value="elevated">Elevated</option>
+                                        <option value="high">High</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>Sleep Quality (last night)</label>
+                                    <select id="sleep-quality" class="form-select">
+                                        <option value="poor">Poor (&lt;5 hours)</option>
+                                        <option value="fair">Fair (5-6 hours)</option>
+                                        <option value="good" selected>Good (7-8 hours)</option>
+                                        <option value="excellent">Excellent (&gt;8 hours)</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>Illness/Symptoms</label>
+                                    <select id="illness" class="form-select">
+                                        <option value="none" selected>None</option>
+                                        <option value="mild_cold">Mild Cold</option>
+                                        <option value="fever">Fever</option>
+                                        <option value="infection">Active Infection</option>
+                                    </select>
+                                </div>
                             </div>
-                            <div class="metric-value" id="hypo-value">--</div>
-                            <div class="metric-unit">% Time Below 54 mg/dL</div>
+                        </div>
+
+                        <!-- Action Buttons -->
+                        <div class="action-bar">
+                            <button class="btn btn-primary btn-lg" id="process-data">
+                                Process Through AEGIS Layers
+                            </button>
                         </div>
                     </div>
+                </section>
 
-                    <div class="chart-container">
-                        <div class="chart-header">
-                            <h3>Glucose Trajectory</h3>
-                            <div class="chart-legend">
-                                <span class="legend-item"><span class="legend-color safe"></span>Target Range
-                                    (70-180)</span>
-                                <span class="legend-item"><span class="legend-color danger"></span>Danger Zone
-                                    (&lt;54)</span>
+                <!-- Layer Processing Section -->
+                <section id="processing-section" class="section">
+                    <div class="processing-layout">
+                        <div class="layer-pipeline">
+                            <!-- Layer 1 -->
+                            <div class="layer-block" id="layer-1-block">
+                                <div class="layer-header">
+                                    <div class="layer-badge">L1</div>
+                                    <div class="layer-title">
+                                        <h3>Semantic Sensorium</h3>
+                                        <p>SNOMED-CT extraction, semantic entropy filtering, proxy identification</p>
+                                    </div>
+                                    <div class="layer-status-badge" id="l1-badge">Pending</div>
+                                </div>
+                                <div class="layer-output" id="l1-output">
+                                    <div class="output-placeholder">Awaiting input data...</div>
+                                </div>
                             </div>
-                        </div>
-                        <div class="chart-wrapper">
-                            <canvas id="glucose-chart"></canvas>
-                        </div>
-                    </div>
 
-                    <div class="layers-grid">
-                        <h3 class="section-title">5-Layer Architecture Status</h3>
-                        <div class="layer-cards">
-                            <div class="layer-card" data-layer="1">
-                                <div class="layer-number">L1</div>
-                                <div class="layer-info">
-                                    <span class="layer-name">Semantic Sensorium</span>
-                                    <span class="layer-desc">SNOMED-CT Extraction, Proxy Identification</span>
+                            <!-- Layer 2 -->
+                            <div class="layer-block" id="layer-2-block">
+                                <div class="layer-header">
+                                    <div class="layer-badge">L2</div>
+                                    <div class="layer-title">
+                                        <h3>Adaptive Digital Twin</h3>
+                                        <p>UDE state estimation, AC-UKF/RBPF switching, regime detection</p>
+                                    </div>
+                                    <div class="layer-status-badge" id="l2-badge">Pending</div>
                                 </div>
-                                <div class="layer-status" id="l1-status">Idle</div>
+                                <div class="layer-output" id="l2-output">
+                                    <div class="output-placeholder">Awaiting L1 output...</div>
+                                </div>
                             </div>
-                            <div class="layer-card" data-layer="2">
-                                <div class="layer-number">L2</div>
-                                <div class="layer-info">
-                                    <span class="layer-name">Digital Twin</span>
-                                    <span class="layer-desc">UDE State Estimation, AC-UKF/RBPF</span>
+
+                            <!-- Layer 3 -->
+                            <div class="layer-block" id="layer-3-block">
+                                <div class="layer-header">
+                                    <div class="layer-badge">L3</div>
+                                    <div class="layer-title">
+                                        <h3>Causal Inference Engine</h3>
+                                        <p>Harmonic G-Estimation, proximal adjustment, treatment effect</p>
+                                    </div>
+                                    <div class="layer-status-badge" id="l3-badge">Pending</div>
                                 </div>
-                                <div class="layer-status" id="l2-status">Idle</div>
+                                <div class="layer-output" id="l3-output">
+                                    <div class="output-placeholder">Awaiting L2 output...</div>
+                                </div>
                             </div>
-                            <div class="layer-card" data-layer="3">
-                                <div class="layer-number">L3</div>
-                                <div class="layer-info">
-                                    <span class="layer-name">Causal Engine</span>
-                                    <span class="layer-desc">Harmonic G-Estimation, Proximal CI</span>
+
+                            <!-- Layer 4 -->
+                            <div class="layer-block" id="layer-4-block">
+                                <div class="layer-header">
+                                    <div class="layer-badge">L4</div>
+                                    <div class="layer-title">
+                                        <h3>Decision Engine</h3>
+                                        <p>Action-Centered Bandits, Counterfactual Thompson Sampling</p>
+                                    </div>
+                                    <div class="layer-status-badge" id="l4-badge">Pending</div>
                                 </div>
-                                <div class="layer-status" id="l3-status">Idle</div>
+                                <div class="layer-output" id="l4-output">
+                                    <div class="output-placeholder">Awaiting L3 output...</div>
+                                </div>
                             </div>
-                            <div class="layer-card" data-layer="4">
-                                <div class="layer-number">L4</div>
-                                <div class="layer-info">
-                                    <span class="layer-name">Decision Engine</span>
-                                    <span class="layer-desc">Counterfactual Thompson Sampling</span>
+
+                            <!-- Layer 5 -->
+                            <div class="layer-block" id="layer-5-block">
+                                <div class="layer-header">
+                                    <div class="layer-badge safety">L5</div>
+                                    <div class="layer-title">
+                                        <h3>Simplex Safety Supervisor</h3>
+                                        <p>3-tier verification: Reflex, STL Monitor, Seldonian Constraints</p>
+                                    </div>
+                                    <div class="layer-status-badge" id="l5-badge">Pending</div>
                                 </div>
-                                <div class="layer-status" id="l4-status">Idle</div>
-                            </div>
-                            <div class="layer-card" data-layer="5">
-                                <div class="layer-number">L5</div>
-                                <div class="layer-info">
-                                    <span class="layer-name">Safety Supervisor</span>
-                                    <span class="layer-desc">Simplex Architecture, STL Verification</span>
+                                <div class="layer-output" id="l5-output">
+                                    <div class="output-placeholder">Awaiting L4 output...</div>
                                 </div>
-                                <div class="layer-status safe" id="l5-status">Ready</div>
                             </div>
                         </div>
                     </div>
                 </section>
 
-                <!-- Simulation Section -->
+                <!-- Results Section -->
+                <section id="results-section" class="section">
+                    <div class="results-layout">
+                        <div class="results-empty" id="results-empty">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="empty-icon">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                                    d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                            </svg>
+                            <h3>No Results Yet</h3>
+                            <p>Process patient data through AEGIS layers to see treatment recommendations and safety
+                                analysis.</p>
+                            <button class="btn btn-primary" onclick="navigateToSection('input')">Enter Patient
+                                Data</button>
+                        </div>
+
+                        <div class="results-content hidden" id="results-data">
+                            <!-- Treatment Recommendation -->
+                            <div class="result-card primary">
+                                <h3>Treatment Recommendation</h3>
+                                <div class="recommendation-display">
+                                    <div class="rec-main">
+                                        <span class="rec-label">Recommended Bolus</span>
+                                        <span class="rec-value" id="rec-bolus">--</span>
+                                        <span class="rec-unit">Units</span>
+                                    </div>
+                                    <div class="rec-breakdown">
+                                        <div class="rec-item">
+                                            <span>Meal Coverage</span>
+                                            <span id="rec-meal-dose">--</span>
+                                        </div>
+                                        <div class="rec-item">
+                                            <span>Correction Dose</span>
+                                            <span id="rec-correction">--</span>
+                                        </div>
+                                        <div class="rec-item">
+                                            <span>Context Adjustment</span>
+                                            <span id="rec-adjustment">--</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="rec-confidence">
+                                    <span>Confidence Interval (95%):</span>
+                                    <span id="rec-ci">--</span>
+                                </div>
+                            </div>
+
+                            <!-- Safety Verification -->
+                            <div class="result-card">
+                                <h3>Safety Verification (L5)</h3>
+                                <div class="safety-tiers">
+                                    <div class="safety-tier" id="tier-1-result">
+                                        <div class="tier-header">
+                                            <span class="tier-name">Tier 1: Reflex Controller</span>
+                                            <span class="tier-status">--</span>
+                                        </div>
+                                        <p class="tier-detail">Model-free safety bounds check</p>
+                                    </div>
+                                    <div class="safety-tier" id="tier-2-result">
+                                        <div class="tier-header">
+                                            <span class="tier-name">Tier 2: STL Monitor</span>
+                                            <span class="tier-status">--</span>
+                                        </div>
+                                        <p class="tier-detail">Signal Temporal Logic verification</p>
+                                    </div>
+                                    <div class="safety-tier" id="tier-3-result">
+                                        <div class="tier-header">
+                                            <span class="tier-name">Tier 3: Seldonian</span>
+                                            <span class="tier-status">--</span>
+                                        </div>
+                                        <p class="tier-detail">Probabilistic constraint satisfaction</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Predicted Outcomes -->
+                            <div class="result-card">
+                                <h3>Predicted Glucose Trajectory</h3>
+                                <div class="chart-container-small">
+                                    <canvas id="prediction-chart"></canvas>
+                                </div>
+                                <div class="prediction-metrics">
+                                    <div class="pred-metric">
+                                        <span class="pred-label">Predicted Peak</span>
+                                        <span class="pred-value" id="pred-peak">--</span>
+                                    </div>
+                                    <div class="pred-metric">
+                                        <span class="pred-label">Time to Peak</span>
+                                        <span class="pred-value" id="pred-time-peak">--</span>
+                                    </div>
+                                    <div class="pred-metric">
+                                        <span class="pred-label">Return to Target</span>
+                                        <span class="pred-value" id="pred-return">--</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Causal Analysis -->
+                            <div class="result-card">
+                                <h3>Causal Effect Analysis (L3)</h3>
+                                <div class="causal-display">
+                                    <div class="causal-main">
+                                        <span class="causal-label">Individual Treatment Effect τ(t)</span>
+                                        <span class="causal-value" id="causal-tau">--</span>
+                                        <span class="causal-unit">mg/dL per Unit</span>
+                                    </div>
+                                    <div class="causal-details">
+                                        <div class="causal-item">
+                                            <span>Population Average</span>
+                                            <span id="causal-pop">-25 mg/dL/U</span>
+                                        </div>
+                                        <div class="causal-item">
+                                            <span>Individual Deviation</span>
+                                            <span id="causal-dev">--</span>
+                                        </div>
+                                        <div class="causal-item">
+                                            <span>Confounding Adjustment</span>
+                                            <span id="causal-adj">--</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Action Buttons -->
+                            <div class="result-actions">
+                                <button class="btn btn-success" id="approve-recommendation">
+                                    Approve Recommendation
+                                </button>
+                                <button class="btn btn-secondary" id="modify-dose">
+                                    Modify Dose
+                                </button>
+                                <button class="btn btn-outline" id="reject-recommendation">
+                                    Reject / Manual Override
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Batch Simulation Section -->
                 <section id="simulation-section" class="section">
                     <div class="simulation-layout">
-                        <div class="config-panel">
-                            <h3 class="panel-title">Simulation Configuration</h3>
-                            <p class="panel-desc">Configure UVA/Padova T1D Simulator parameters based on FDA-accepted
-                                virtual patient cohort.</p>
+                        <div class="panel">
+                            <h3 class="panel-title">Batch Simulation</h3>
+                            <p class="panel-desc">Run a multi-hour simulation with synthetic data to test system
+                                performance with various scenarios.</p>
 
-                            <div class="config-group">
-                                <label class="config-label">Virtual Patient Profile</label>
-                                <select id="patient-profile" class="config-select">
-                                    <option value="adult_avg">Adult - Average Parameters</option>
-                                    <option value="adult_001">Adult #001 (BW: 78kg, TDI: 42U)</option>
-                                    <option value="adult_002">Adult #002 (BW: 65kg, TDI: 38U)</option>
-                                    <option value="adult_003">Adult #003 (BW: 92kg, TDI: 56U)</option>
-                                    <option value="adolescent_avg">Adolescent - Average Parameters</option>
-                                    <option value="adolescent_001">Adolescent #001 (BW: 55kg, TDI: 32U)</option>
-                                    <option value="adolescent_002">Adolescent #002 (BW: 48kg, TDI: 28U)</option>
-                                    <option value="child_avg">Child - Average Parameters</option>
-                                    <option value="child_001">Child #001 (BW: 32kg, TDI: 18U)</option>
-                                    <option value="child_002">Child #002 (BW: 28kg, TDI: 15U)</option>
-                                </select>
-                            </div>
-
-                            <div class="config-group">
-                                <label class="config-label">Simulation Duration</label>
-                                <select id="sim-duration" class="config-select">
-                                    <option value="6">6 Hours</option>
-                                    <option value="12">12 Hours</option>
-                                    <option value="24" selected>24 Hours</option>
-                                    <option value="48">48 Hours</option>
-                                    <option value="72">72 Hours (3 Days)</option>
-                                </select>
-                            </div>
-
-                            <div class="config-group">
-                                <label class="config-label">Sampling Interval</label>
-                                <select id="sampling-interval" class="config-select">
-                                    <option value="1">1 Minute</option>
-                                    <option value="5" selected>5 Minutes (CGM Standard)</option>
-                                    <option value="15">15 Minutes</option>
-                                </select>
-                            </div>
-
-                            <div class="config-group">
-                                <label class="config-label">Meal Protocol</label>
-                                <select id="meal-protocol" class="config-select">
-                                    <option value="standard">Standard (B:45g, L:70g, D:80g)</option>
-                                    <option value="high_carb">High Carb (B:60g, L:90g, D:100g)</option>
-                                    <option value="low_carb">Low Carb (B:25g, L:40g, D:50g)</option>
-                                    <option value="irregular">Irregular Timing</option>
-                                    <option value="missed_meal">Missed Lunch Scenario</option>
-                                    <option value="custom">Custom Configuration</option>
-                                </select>
-                            </div>
-
-                            <div id="custom-meals" class="config-subgroup hidden">
-                                <div class="meal-config">
-                                    <label>Breakfast</label>
-                                    <input type="number" id="breakfast-carbs" value="45" min="0" max="150"
-                                        class="config-input">
-                                    <span class="input-unit">g CHO</span>
-                                    <input type="time" id="breakfast-time" value="07:00" class="config-input">
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label>Virtual Patient</label>
+                                    <select id="sim-patient" class="form-select">
+                                        <option value="adult_avg">Adult Average (75kg, 45U TDI)</option>
+                                        <option value="adult_high_ir">Adult High Insulin Resistance</option>
+                                        <option value="adult_sensitive">Adult Insulin Sensitive</option>
+                                        <option value="adolescent">Adolescent (52kg, 32U TDI)</option>
+                                        <option value="child">Child (30kg, 16U TDI)</option>
+                                    </select>
                                 </div>
-                                <div class="meal-config">
-                                    <label>Lunch</label>
-                                    <input type="number" id="lunch-carbs" value="70" min="0" max="150"
-                                        class="config-input">
-                                    <span class="input-unit">g CHO</span>
-                                    <input type="time" id="lunch-time" value="12:00" class="config-input">
+                                <div class="form-group">
+                                    <label>Duration</label>
+                                    <select id="sim-duration" class="form-select">
+                                        <option value="6">6 Hours</option>
+                                        <option value="12">12 Hours</option>
+                                        <option value="24" selected>24 Hours</option>
+                                    </select>
                                 </div>
-                                <div class="meal-config">
-                                    <label>Dinner</label>
-                                    <input type="number" id="dinner-carbs" value="80" min="0" max="150"
-                                        class="config-input">
-                                    <span class="input-unit">g CHO</span>
-                                    <input type="time" id="dinner-time" value="19:00" class="config-input">
+                                <div class="form-group">
+                                    <label>Meal Scenario</label>
+                                    <select id="sim-meals" class="form-select">
+                                        <option value="standard">Standard (3 meals)</option>
+                                        <option value="high_carb">High Carb Challenge</option>
+                                        <option value="low_carb">Low Carb</option>
+                                        <option value="irregular">Irregular Timing</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>Challenge Scenario</label>
+                                    <select id="sim-challenge" class="form-select">
+                                        <option value="none">Normal Day</option>
+                                        <option value="exercise">With Exercise</option>
+                                        <option value="stress">High Stress</option>
+                                        <option value="illness">Mild Illness</option>
+                                        <option value="dawn">Dawn Phenomenon</option>
+                                    </select>
                                 </div>
                             </div>
 
-                            <div class="config-group">
-                                <label class="config-label">Initial Glucose State</label>
-                                <div class="range-input">
-                                    <input type="range" id="initial-glucose" min="70" max="250" value="120"
-                                        class="config-range">
-                                    <span id="initial-glucose-value" class="range-value">120 mg/dL</span>
-                                </div>
-                            </div>
-
-                            <div class="config-group">
-                                <label class="config-label">Insulin Sensitivity Factor</label>
-                                <div class="range-input">
-                                    <input type="range" id="isf" min="20" max="100" value="50" class="config-range">
-                                    <span id="isf-value" class="range-value">50 mg/dL per U</span>
-                                </div>
-                            </div>
-
-                            <div class="config-group">
-                                <label class="config-label">Carb Ratio</label>
-                                <div class="range-input">
-                                    <input type="range" id="cr" min="5" max="25" value="12" class="config-range">
-                                    <span id="cr-value" class="range-value">1:12 (g/U)</span>
-                                </div>
-                            </div>
-
-                            <div class="config-group">
-                                <label class="config-label">Stress/Exercise Scenario</label>
-                                <select id="activity-scenario" class="config-select">
-                                    <option value="none">No Additional Factors</option>
-                                    <option value="mild_exercise">Mild Exercise (30 min walk)</option>
-                                    <option value="moderate_exercise">Moderate Exercise (45 min jog)</option>
-                                    <option value="intense_exercise">Intense Exercise (60 min training)</option>
-                                    <option value="stress">High Psychological Stress</option>
-                                    <option value="illness">Mild Illness (Increased IR)</option>
-                                </select>
-                            </div>
-
-                            <div class="config-group">
-                                <label class="config-label">Sensor Noise Model</label>
-                                <select id="noise-model" class="config-select">
-                                    <option value="ideal">Ideal (No Noise)</option>
-                                    <option value="low" selected>Low Noise (CV: 5%)</option>
-                                    <option value="typical">Typical CGM (CV: 10%)</option>
-                                    <option value="high">High Noise (CV: 15%)</option>
-                                </select>
-                            </div>
-
-                            <div class="config-group">
-                                <label class="config-label">AEGIS Configuration</label>
-                                <div class="checkbox-group">
-                                    <label class="checkbox-label">
-                                        <input type="checkbox" id="enable-l1" checked>
-                                        <span>Layer 1: Semantic Extraction</span>
-                                    </label>
-                                    <label class="checkbox-label">
-                                        <input type="checkbox" id="enable-l2" checked>
-                                        <span>Layer 2: Digital Twin</span>
-                                    </label>
-                                    <label class="checkbox-label">
-                                        <input type="checkbox" id="enable-l3" checked>
-                                        <span>Layer 3: Causal Inference</span>
-                                    </label>
-                                    <label class="checkbox-label">
-                                        <input type="checkbox" id="enable-l4" checked>
-                                        <span>Layer 4: CTS Decision</span>
-                                    </label>
-                                    <label class="checkbox-label">
-                                        <input type="checkbox" id="enable-l5" checked disabled>
-                                        <span>Layer 5: Safety (Required)</span>
-                                    </label>
-                                </div>
-                            </div>
-
-                            <button class="btn btn-primary btn-block" id="run-simulation">
-                                Run Simulation
+                            <button class="btn btn-primary btn-block" id="run-batch-sim">
+                                Run Batch Simulation
                             </button>
                         </div>
 
-                        <div class="results-panel">
-                            <div class="results-header">
-                                <h3 class="panel-title">Simulation Results</h3>
-                                <span class="sim-status" id="sim-status">Ready</span>
+                        <div class="panel simulation-results" id="sim-results-panel">
+                            <h3 class="panel-title">Simulation Results</h3>
+                            <div class="sim-status-display" id="sim-status-display">
+                                <p>Configure parameters and click "Run Batch Simulation"</p>
                             </div>
-
-                            <div class="results-content" id="results-content">
-                                <div class="empty-state">
-                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="empty-icon">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
-                                            d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-                                    </svg>
-                                    <p>Configure parameters and run simulation to view results</p>
-                                </div>
+                            <div class="sim-chart-container hidden" id="sim-chart-container">
+                                <canvas id="sim-chart"></canvas>
                             </div>
-
-                            <div class="execution-log hidden" id="execution-log">
-                                <h4>Execution Log</h4>
-                                <div class="log-content" id="log-content"></div>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-
-                <!-- Architecture Section -->
-                <section id="architecture-section" class="section">
-                    <div class="arch-content">
-                        <h3 class="section-title">AEGIS 5-Layer Architecture</h3>
-                        <p class="section-desc">Unified architecture for safe, causal N-of-1 precision medicine
-                            integrating causal inference, Bayesian state estimation, and formal verification.</p>
-
-                        <div class="arch-diagram">
-                            <div class="arch-layer" data-layer="5">
-                                <div class="arch-layer-header">
-                                    <span class="arch-layer-num">L5</span>
-                                    <span class="arch-layer-name">Simplex Safety Supervisor</span>
+                            <div class="sim-metrics hidden" id="sim-metrics">
+                                <div class="sim-metric">
+                                    <span class="metric-label">Time in Range (70-180)</span>
+                                    <span class="metric-value" id="sim-tir">--</span>
                                 </div>
-                                <div class="arch-layer-content">
-                                    <div class="arch-component">Tier 1: Reflex Controller</div>
-                                    <div class="arch-component">Tier 2: STL Monitor</div>
-                                    <div class="arch-component">Tier 3: Seldonian Constraints</div>
+                                <div class="sim-metric">
+                                    <span class="metric-label">Time Below 70</span>
+                                    <span class="metric-value" id="sim-tbr">--</span>
                                 </div>
-                                <div class="arch-metrics">
-                                    <span>Latency: 0.001ms</span>
-                                    <span>Accuracy: 100%</span>
-                                    <span>Violations: 0%</span>
+                                <div class="sim-metric">
+                                    <span class="metric-label">Severe Hypo (&lt;54)</span>
+                                    <span class="metric-value" id="sim-hypo">--</span>
                                 </div>
-                            </div>
-                            <div class="arch-arrow">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M19 14l-7 7m0 0l-7-7m7 7V3" />
-                                </svg>
-                            </div>
-                            <div class="arch-layer" data-layer="4">
-                                <div class="arch-layer-header">
-                                    <span class="arch-layer-num">L4</span>
-                                    <span class="arch-layer-name">Decision Engine</span>
+                                <div class="sim-metric">
+                                    <span class="metric-label">Time Above 180</span>
+                                    <span class="metric-value" id="sim-tar">--</span>
                                 </div>
-                                <div class="arch-layer-content">
-                                    <div class="arch-component">Action-Centered Bandits</div>
-                                    <div class="arch-component">Counterfactual Thompson Sampling</div>
+                                <div class="sim-metric">
+                                    <span class="metric-label">Mean Glucose</span>
+                                    <span class="metric-value" id="sim-mean">--</span>
                                 </div>
-                                <div class="arch-metrics">
-                                    <span>Regret Slope: 0.515</span>
-                                    <span>Variance Ratio: 0.016</span>
+                                <div class="sim-metric">
+                                    <span class="metric-label">CV%</span>
+                                    <span class="metric-value" id="sim-cv">--</span>
                                 </div>
-                            </div>
-                            <div class="arch-arrow">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M19 14l-7 7m0 0l-7-7m7 7V3" />
-                                </svg>
-                            </div>
-                            <div class="arch-layer" data-layer="3">
-                                <div class="arch-layer-header">
-                                    <span class="arch-layer-num">L3</span>
-                                    <span class="arch-layer-name">Causal Inference Engine</span>
+                                <div class="sim-metric">
+                                    <span class="metric-label">Safety Violations</span>
+                                    <span class="metric-value" id="sim-violations">--</span>
                                 </div>
-                                <div class="arch-layer-content">
-                                    <div class="arch-component">Harmonic G-Estimation</div>
-                                    <div class="arch-component">Proximal Causal Inference</div>
-                                    <div class="arch-component">Martingale Confidence Sequences</div>
-                                </div>
-                                <div class="arch-metrics">
-                                    <span>RMSE: 0.021</span>
-                                    <span>Coverage: 99.2%</span>
-                                    <span>Bias Reduction: 75.7%</span>
-                                </div>
-                            </div>
-                            <div class="arch-arrow">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M19 14l-7 7m0 0l-7-7m7 7V3" />
-                                </svg>
-                            </div>
-                            <div class="arch-layer" data-layer="2">
-                                <div class="arch-layer-header">
-                                    <span class="arch-layer-num">L2</span>
-                                    <span class="arch-layer-name">Adaptive Digital Twin</span>
-                                </div>
-                                <div class="arch-layer-content">
-                                    <div class="arch-component">Universal Differential Equations</div>
-                                    <div class="arch-component">AC-UKF / RBPF Switching</div>
-                                </div>
-                                <div class="arch-metrics">
-                                    <span>Variance Reduction: 18.6%</span>
-                                    <span>Q Adaptation: 10x</span>
-                                </div>
-                            </div>
-                            <div class="arch-arrow">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M19 14l-7 7m0 0l-7-7m7 7V3" />
-                                </svg>
-                            </div>
-                            <div class="arch-layer" data-layer="1">
-                                <div class="arch-layer-header">
-                                    <span class="arch-layer-num">L1</span>
-                                    <span class="arch-layer-name">Semantic Sensorium</span>
-                                </div>
-                                <div class="arch-layer-content">
-                                    <div class="arch-component">Ontology-Constrained Extraction</div>
-                                    <div class="arch-component">Semantic Entropy Filter</div>
-                                    <div class="arch-component">Causal Proxy Classification</div>
-                                </div>
-                                <div class="arch-metrics">
-                                    <span>F1 Score: 0.90</span>
-                                    <span>Entropy p: 0.776</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-
-                <!-- Validation Section -->
-                <section id="validation-section" class="section">
-                    <div class="validation-content">
-                        <h3 class="section-title">Validation Results</h3>
-                        <p class="section-desc">Comprehensive validation on FDA-accepted UVA/Padova T1D Simulator with
-                            30 virtual patients.</p>
-
-                        <div class="validation-summary">
-                            <div class="summary-card">
-                                <span class="summary-value">28/28</span>
-                                <span class="summary-label">Tests Passed</span>
-                            </div>
-                            <div class="summary-card">
-                                <span class="summary-value">100%</span>
-                                <span class="summary-label">Pass Rate</span>
-                            </div>
-                            <div class="summary-card">
-                                <span class="summary-value">0.0%</span>
-                                <span class="summary-label">Severe Hypoglycemia</span>
-                            </div>
-                            <div class="summary-card">
-                                <span class="summary-value">0.0%</span>
-                                <span class="summary-label">Safety Violations</span>
-                            </div>
-                        </div>
-
-                        <div class="validation-table-container">
-                            <table class="validation-table">
-                                <thead>
-                                    <tr>
-                                        <th>Layer</th>
-                                        <th>Tests</th>
-                                        <th>Pass Rate</th>
-                                        <th>Key Metric</th>
-                                        <th>Status</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>L1: Semantic Sensorium</td>
-                                        <td>6/6</td>
-                                        <td>100%</td>
-                                        <td>F1 = 0.90, Entropy p = 0.776</td>
-                                        <td><span class="status-badge pass">Pass</span></td>
-                                    </tr>
-                                    <tr>
-                                        <td>L2: Digital Twin</td>
-                                        <td>4/4</td>
-                                        <td>100%</td>
-                                        <td>Variance Reduction = 18.6%</td>
-                                        <td><span class="status-badge pass">Pass</span></td>
-                                    </tr>
-                                    <tr>
-                                        <td>L3: Causal Engine</td>
-                                        <td>4/4</td>
-                                        <td>100%</td>
-                                        <td>RMSE = 0.021, Coverage = 99.2%</td>
-                                        <td><span class="status-badge pass">Pass</span></td>
-                                    </tr>
-                                    <tr>
-                                        <td>L4: Decision Engine</td>
-                                        <td>4/4</td>
-                                        <td>100%</td>
-                                        <td>Regret Slope = 0.515</td>
-                                        <td><span class="status-badge pass">Pass</span></td>
-                                    </tr>
-                                    <tr>
-                                        <td>L5: Safety Supervisor</td>
-                                        <td>5/5</td>
-                                        <td>100%</td>
-                                        <td>Tier Accuracy = 100%</td>
-                                        <td><span class="status-badge pass">Pass</span></td>
-                                    </tr>
-                                    <tr>
-                                        <td>Integration</td>
-                                        <td>5/5</td>
-                                        <td>100%</td>
-                                        <td>TIR = 73.1%, TBR&lt;54 = 0%</td>
-                                        <td><span class="status-badge pass">Pass</span></td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-
-                        <div class="clinical-results">
-                            <h4>Clinical Performance Metrics</h4>
-                            <div class="clinical-grid">
-                                <div class="clinical-metric">
-                                    <div class="clinical-bar">
-                                        <div class="bar-track">
-                                            <div class="bar-fill" style="width: 73.1%"></div>
-                                        </div>
-                                        <span class="bar-value">73.1%</span>
-                                    </div>
-                                    <span class="clinical-label">Time in Range (70-180 mg/dL)</span>
-                                </div>
-                                <div class="clinical-metric">
-                                    <div class="clinical-bar">
-                                        <div class="bar-track">
-                                            <div class="bar-fill warning" style="width: 26.9%"></div>
-                                        </div>
-                                        <span class="bar-value">26.9%</span>
-                                    </div>
-                                    <span class="clinical-label">Time Below Range (60-70 mg/dL) - Conservative
-                                        Safety</span>
-                                </div>
-                                <div class="clinical-metric">
-                                    <div class="clinical-bar success">
-                                        <div class="bar-track">
-                                            <div class="bar-fill success" style="width: 0%"></div>
-                                        </div>
-                                        <span class="bar-value">0.0%</span>
-                                    </div>
-                                    <span class="clinical-label">Severe Hypoglycemia (&lt;54 mg/dL)</span>
-                                </div>
-                                <div class="clinical-metric">
-                                    <div class="clinical-bar success">
-                                        <div class="bar-track">
-                                            <div class="bar-fill success" style="width: 0%"></div>
-                                        </div>
-                                        <span class="bar-value">0.0%</span>
-                                    </div>
-                                    <span class="clinical-label">Seldonian Constraint Violations</span>
+                                <div class="sim-metric">
+                                    <span class="metric-label">Decisions Made</span>
+                                    <span class="metric-value" id="sim-decisions">--</span>
                                 </div>
                             </div>
                         </div>
@@ -622,7 +564,7 @@
     <div id="toast-container" class="toast-container"></div>
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
-    <script src="simulation.js"></script>
+    <script src="aegis-engine.js"></script>
     <script src="app.js"></script>
 </body>
 

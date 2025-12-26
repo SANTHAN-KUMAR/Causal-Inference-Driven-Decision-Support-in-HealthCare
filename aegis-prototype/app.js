@@ -1,6 +1,6 @@
 /**
- * AEGIS 3.0 - Main Application Controller
- * Production-grade clinical decision support interface
+ * AEGIS 3.0 - Application Controller
+ * Handles UI interactions and connects to AEGIS Engine
  */
 
 // ============================================
@@ -8,13 +8,11 @@
 // ============================================
 
 const AppState = {
-    currentSection: 'dashboard',
-    simulation: {
-        running: false,
-        results: null
-    },
-    chart: null,
-    config: {}
+    currentSection: 'input',
+    processing: false,
+    lastResults: null,
+    predictionChart: null,
+    simChart: null
 };
 
 // ============================================
@@ -23,10 +21,8 @@ const AppState = {
 
 document.addEventListener('DOMContentLoaded', () => {
     initializeNavigation();
-    initializeChart();
-    initializeSimulationConfig();
     initializeEventListeners();
-    updateDashboardMetrics();
+    updateSystemStatus('ready');
 });
 
 // ============================================
@@ -34,13 +30,10 @@ document.addEventListener('DOMContentLoaded', () => {
 // ============================================
 
 function initializeNavigation() {
-    const navLinks = document.querySelectorAll('.nav-link');
-
-    navLinks.forEach(link => {
+    document.querySelectorAll('.nav-link').forEach(link => {
         link.addEventListener('click', (e) => {
             e.preventDefault();
-            const section = link.dataset.section;
-            navigateToSection(section);
+            navigateToSection(link.dataset.section);
         });
     });
 }
@@ -63,106 +56,488 @@ function navigateToSection(sectionId) {
 
     // Update header
     const titles = {
-        dashboard: 'System Dashboard',
-        simulation: 'Run Simulation',
-        architecture: '5-Layer Architecture',
-        validation: 'Validation Results'
+        input: { title: 'Patient Data Input', subtitle: 'Enter patient data for real-time AEGIS processing' },
+        processing: { title: 'Layer Processing', subtitle: 'View AEGIS 5-layer pipeline execution' },
+        results: { title: 'Treatment Recommendation', subtitle: 'View computed recommendation and safety analysis' },
+        simulation: { title: 'Batch Simulation', subtitle: 'Run multi-hour simulations with synthetic data' }
     };
 
-    document.getElementById('page-title').textContent = titles[sectionId] || 'Dashboard';
+    const header = titles[sectionId] || titles.input;
+    document.getElementById('page-title').textContent = header.title;
+    document.querySelector('.header-subtitle').textContent = header.subtitle;
+
     AppState.currentSection = sectionId;
 }
 
+// Make globally accessible
+window.navigateToSection = navigateToSection;
+
 // ============================================
-// Chart Initialization
+// Event Listeners
 // ============================================
 
-function initializeChart() {
-    const ctx = document.getElementById('glucose-chart');
+function initializeEventListeners() {
+    // Process button
+    document.getElementById('process-data')?.addEventListener('click', processPatientData);
+
+    // Reset button
+    document.getElementById('reset-system')?.addEventListener('click', resetSystem);
+
+    // Emergency stop
+    document.getElementById('emergency-stop')?.addEventListener('click', emergencyStop);
+
+    // Batch simulation
+    document.getElementById('run-batch-sim')?.addEventListener('click', runBatchSimulation);
+
+    // Recommendation actions
+    document.getElementById('approve-recommendation')?.addEventListener('click', approveRecommendation);
+    document.getElementById('modify-dose')?.addEventListener('click', modifyDose);
+    document.getElementById('reject-recommendation')?.addEventListener('click', rejectRecommendation);
+}
+
+// ============================================
+// Patient Data Processing
+// ============================================
+
+async function processPatientData() {
+    if (AppState.processing) {
+        showToast('Processing already in progress', 'warning');
+        return;
+    }
+
+    // Collect input data
+    const inputData = collectInputData();
+
+    if (!validateInputData(inputData)) {
+        return;
+    }
+
+    AppState.processing = true;
+    updateSystemStatus('processing');
+
+    // Switch to processing view
+    navigateToSection('processing');
+    resetLayerOutputs();
+
+    try {
+        // Run AEGIS pipeline
+        const results = await AEGISPipeline.process(inputData, onLayerUpdate);
+
+        AppState.lastResults = results;
+
+        // Display results
+        displayResults(results);
+
+        updateSystemStatus('complete');
+        showToast('Processing complete - view results', 'success');
+
+        // Auto-navigate to results after short delay
+        setTimeout(() => {
+            navigateToSection('results');
+        }, 1500);
+
+    } catch (error) {
+        console.error('Processing error:', error);
+        showToast('Processing failed: ' + error.message, 'error');
+        updateSystemStatus('error');
+    } finally {
+        AppState.processing = false;
+    }
+}
+
+function collectInputData() {
+    return {
+        // Patient profile
+        patientId: document.getElementById('patient-id')?.value || 'PAT-001',
+        weight: parseFloat(document.getElementById('patient-weight')?.value) || 75,
+        tdi: parseFloat(document.getElementById('patient-tdi')?.value) || 45,
+        diabetesDuration: parseFloat(document.getElementById('patient-duration')?.value) || 5,
+
+        // Glucose reading
+        glucose: parseFloat(document.getElementById('current-glucose')?.value) || 120,
+        trend: document.getElementById('glucose-trend')?.value || 'stable',
+
+        // Meal
+        mealCarbs: parseFloat(document.getElementById('meal-carbs')?.value) || 0,
+        mealType: document.getElementById('meal-type')?.value || 'lunch',
+        mealGI: document.getElementById('meal-gi')?.value || 'medium',
+        mealFat: document.getElementById('meal-fat')?.value || 'medium',
+
+        // Diary
+        diary: document.getElementById('diary-entry')?.value || '',
+
+        // Context
+        activityLevel: document.getElementById('activity-level')?.value || 'light',
+        stressLevel: document.getElementById('stress-level')?.value || 'normal',
+        sleepQuality: document.getElementById('sleep-quality')?.value || 'good',
+        illness: document.getElementById('illness')?.value || 'none'
+    };
+}
+
+function validateInputData(data) {
+    if (data.glucose < 40 || data.glucose > 400) {
+        showToast('Glucose value must be between 40-400 mg/dL', 'error');
+        return false;
+    }
+    if (data.mealCarbs < 0 || data.mealCarbs > 200) {
+        showToast('Carbohydrates must be between 0-200 grams', 'error');
+        return false;
+    }
+    return true;
+}
+
+// ============================================
+// Layer Update Callbacks
+// ============================================
+
+function onLayerUpdate(layerNum, status, output) {
+    const badge = document.getElementById(`l${layerNum}-badge`);
+    const outputDiv = document.getElementById(`l${layerNum}-output`);
+    const block = document.getElementById(`layer-${layerNum}-block`);
+
+    if (status === 'processing') {
+        badge.textContent = 'Processing...';
+        badge.className = 'layer-status-badge processing';
+        block.classList.add('active');
+    } else if (status === 'complete') {
+        badge.textContent = 'Complete';
+        badge.className = 'layer-status-badge complete';
+
+        // Render layer-specific output
+        outputDiv.innerHTML = renderLayerOutput(layerNum, output);
+    }
+}
+
+function renderLayerOutput(layerNum, output) {
+    switch (layerNum) {
+        case 1:
+            return renderL1Output(output);
+        case 2:
+            return renderL2Output(output);
+        case 3:
+            return renderL3Output(output);
+        case 4:
+            return renderL4Output(output);
+        case 5:
+            return renderL5Output(output);
+        default:
+            return '<div class="output-placeholder">No output</div>';
+    }
+}
+
+function renderL1Output(output) {
+    const concepts = output.extractedConcepts || [];
+
+    if (concepts.length === 0) {
+        return `
+            <div class="layer-result">
+                <div class="result-row">
+                    <span class="result-label">Concepts Extracted</span>
+                    <span class="result-value">0</span>
+                </div>
+                <div class="result-row">
+                    <span class="result-label">Insulin Sensitivity Modifier</span>
+                    <span class="result-value">${(output.insulinSensitivityModifier * 100).toFixed(0)}%</span>
+                </div>
+                <div class="result-note">No significant semantic features detected</div>
+            </div>
+        `;
+    }
+
+    return `
+        <div class="layer-result">
+            <div class="result-row">
+                <span class="result-label">Concepts Extracted</span>
+                <span class="result-value">${concepts.length}</span>
+            </div>
+            <div class="result-row">
+                <span class="result-label">Semantic Entropy</span>
+                <span class="result-value">${output.semanticEntropy.toFixed(3)}</span>
+            </div>
+            <div class="result-row">
+                <span class="result-label">Insulin Sensitivity Modifier</span>
+                <span class="result-value ${output.insulinSensitivityModifier < 0.9 ? 'warning' : ''}">${(output.insulinSensitivityModifier * 100).toFixed(0)}%</span>
+            </div>
+            <div class="concepts-list">
+                ${concepts.map(c => `
+                    <div class="concept-item">
+                        <span class="concept-name">${c.name}</span>
+                        <span class="concept-code">${c.code}</span>
+                        <span class="concept-confidence">${(c.confidence * 100).toFixed(0)}%</span>
+                    </div>
+                `).join('')}
+            </div>
+            <div class="result-row">
+                <span class="result-label">Treatment Proxies (Z)</span>
+                <span class="result-value">${output.treatmentProxies?.length || 0}</span>
+            </div>
+            <div class="result-row">
+                <span class="result-label">Outcome Proxies (W)</span>
+                <span class="result-value">${output.outcomeProxies?.length || 0}</span>
+            </div>
+        </div>
+    `;
+}
+
+function renderL2Output(output) {
+    return `
+        <div class="layer-result">
+            <div class="result-row">
+                <span class="result-label">Current State (G)</span>
+                <span class="result-value">${output.currentState.G.toFixed(0)} mg/dL</span>
+            </div>
+            <div class="result-row">
+                <span class="result-label">Rate of Change</span>
+                <span class="result-value">${output.currentState.Gdot > 0 ? '+' : ''}${output.currentState.Gdot.toFixed(1)} mg/dL/5min</span>
+            </div>
+            <div class="result-row">
+                <span class="result-label">Detected Regime</span>
+                <span class="result-value regime-${output.regime.regime}">${output.regime.regime.toUpperCase()}</span>
+            </div>
+            <div class="result-row">
+                <span class="result-label">Regime Confidence</span>
+                <span class="result-value">${(output.regime.confidence * 100).toFixed(0)}%</span>
+            </div>
+            <div class="result-row">
+                <span class="result-label">Predicted Peak</span>
+                <span class="result-value">${output.prediction.peak.glucose.toFixed(0)} mg/dL @ ${output.prediction.peak.time} min</span>
+            </div>
+            <div class="result-row">
+                <span class="result-label">State Uncertainty</span>
+                <span class="result-value">±${output.uncertainty.confidenceInterval.toFixed(0)} mg/dL</span>
+            </div>
+            <div class="result-row">
+                <span class="result-label">Variance Reduction</span>
+                <span class="result-value success">${output.varianceReduction.toFixed(1)}%</span>
+            </div>
+        </div>
+    `;
+}
+
+function renderL3Output(output) {
+    return `
+        <div class="layer-result">
+            <div class="result-row highlight">
+                <span class="result-label">Individual Treatment Effect τ(t)</span>
+                <span class="result-value">${output.tau.toFixed(1)} mg/dL per U</span>
+            </div>
+            <div class="result-row">
+                <span class="result-label">95% Confidence Interval</span>
+                <span class="result-value">[${output.tauCI[0].toFixed(1)}, ${output.tauCI[1].toFixed(1)}]</span>
+            </div>
+            <div class="result-row">
+                <span class="result-label">Population Average</span>
+                <span class="result-value">${output.populationEffect} mg/dL/U</span>
+            </div>
+            <div class="result-row">
+                <span class="result-label">Individual Deviation</span>
+                <span class="result-value ${output.individualDeviation > 0 ? 'warning' : ''}">${output.individualDeviation > 0 ? '+' : ''}${output.individualDeviation.toFixed(1)} mg/dL/U</span>
+            </div>
+            <div class="result-row">
+                <span class="result-label">Proximal Adjustment</span>
+                <span class="result-value">${output.proximalAdjustment.hasProxies ? 'Applied' : 'N/A'}</span>
+            </div>
+            ${output.proximalAdjustment.hasProxies ? `
+                <div class="result-row">
+                    <span class="result-label">Bias Reduction</span>
+                    <span class="result-value success">${output.proximalAdjustment.biasReduction.toFixed(1)}%</span>
+                </div>
+            ` : ''}
+        </div>
+    `;
+}
+
+function renderL4Output(output) {
+    return `
+        <div class="layer-result">
+            <div class="result-row highlight">
+                <span class="result-label">Recommended Dose</span>
+                <span class="result-value large">${output.recommendedDose.toFixed(1)} U</span>
+            </div>
+            <div class="result-row">
+                <span class="result-label">Meal Coverage</span>
+                <span class="result-value">${output.mealDose.toFixed(1)} U</span>
+            </div>
+            <div class="result-row">
+                <span class="result-label">Correction Dose</span>
+                <span class="result-value">${output.correctionDose.toFixed(1)} U</span>
+            </div>
+            <div class="result-row">
+                <span class="result-label">Context Adjustment</span>
+                <span class="result-value">${output.contextAdjustment >= 0 ? '+' : ''}${output.contextAdjustment.toFixed(1)} U</span>
+            </div>
+            <div class="result-row">
+                <span class="result-label">95% CI</span>
+                <span class="result-value">[${output.confidenceInterval.lower.toFixed(1)}, ${output.confidenceInterval.upper.toFixed(1)}]</span>
+            </div>
+            <div class="result-row">
+                <span class="result-label">Exploration Bonus</span>
+                <span class="result-value">${output.explorationBonus.toFixed(3)}</span>
+            </div>
+            <div class="result-row">
+                <span class="result-label">Estimated Regret</span>
+                <span class="result-value">${output.regret.toFixed(3)}</span>
+            </div>
+        </div>
+    `;
+}
+
+function renderL5Output(output) {
+    const tierClass = (tier) => tier.safe ? 'safe' : 'warning';
+
+    return `
+        <div class="layer-result">
+            <div class="result-row ${output.overallSafe ? 'highlight-safe' : 'highlight-warning'}">
+                <span class="result-label">Overall Safety</span>
+                <span class="result-value ${output.overallSafe ? 'success' : 'danger'}">${output.overallSafe ? 'VERIFIED' : 'INTERVENTION'}</span>
+            </div>
+            
+            <div class="safety-tier ${tierClass(output.tier1)}">
+                <div class="tier-label">Tier 1: Reflex Controller</div>
+                <div class="tier-status">${output.tier1.safe ? 'PASS' : 'FAIL'}</div>
+                <div class="tier-reason">${output.tier1.reason}</div>
+            </div>
+            
+            <div class="safety-tier ${tierClass(output.tier2)}">
+                <div class="tier-label">Tier 2: STL Monitor</div>
+                <div class="tier-status">${output.tier2.safe ? 'PASS' : 'FAIL'}</div>
+                <div class="tier-reason">${output.tier2.reason}</div>
+            </div>
+            
+            <div class="safety-tier ${tierClass(output.tier3)}">
+                <div class="tier-label">Tier 3: Seldonian</div>
+                <div class="tier-status">${output.tier3.safe ? 'PASS' : 'FAIL'}</div>
+                <div class="tier-reason">${output.tier3.reason}</div>
+            </div>
+            
+            ${!output.overallSafe ? `
+                <div class="result-row">
+                    <span class="result-label">Original Dose</span>
+                    <span class="result-value">${output.originalDose.toFixed(1)} U</span>
+                </div>
+                <div class="result-row highlight-safe">
+                    <span class="result-label">Safe Dose</span>
+                    <span class="result-value">${output.safeDose.toFixed(1)} U</span>
+                </div>
+            ` : ''}
+        </div>
+    `;
+}
+
+function resetLayerOutputs() {
+    for (let i = 1; i <= 5; i++) {
+        const badge = document.getElementById(`l${i}-badge`);
+        const outputDiv = document.getElementById(`l${i}-output`);
+        const block = document.getElementById(`layer-${i}-block`);
+
+        badge.textContent = 'Pending';
+        badge.className = 'layer-status-badge';
+        block.classList.remove('active');
+        outputDiv.innerHTML = '<div class="output-placeholder">Awaiting input...</div>';
+    }
+}
+
+// ============================================
+// Results Display
+// ============================================
+
+function displayResults(results) {
+    // Show results content, hide empty state
+    document.getElementById('results-empty').classList.add('hidden');
+    document.getElementById('results-data').classList.remove('hidden');
+
+    const rec = results.recommendation;
+    const l5 = results.layers.L5;
+    const l3 = results.layers.L3;
+    const l2 = results.layers.L2;
+
+    // Update recommendation display
+    document.getElementById('rec-bolus').textContent = rec.dose.toFixed(1);
+    document.getElementById('rec-meal-dose').textContent = rec.mealComponent.toFixed(1) + ' U';
+    document.getElementById('rec-correction').textContent = rec.correctionComponent.toFixed(1) + ' U';
+    document.getElementById('rec-adjustment').textContent = (rec.contextAdjustment >= 0 ? '+' : '') + rec.contextAdjustment.toFixed(1) + ' U';
+    document.getElementById('rec-ci').textContent = `[${rec.confidenceInterval.lower.toFixed(1)}, ${rec.confidenceInterval.upper.toFixed(1)}] U`;
+
+    // Update safety tiers
+    updateSafetyTier('tier-1-result', l5.tier1);
+    updateSafetyTier('tier-2-result', l5.tier2);
+    updateSafetyTier('tier-3-result', l5.tier3);
+
+    // Update causal analysis
+    document.getElementById('causal-tau').textContent = l3.tau.toFixed(1);
+    document.getElementById('causal-dev').textContent = (l3.individualDeviation >= 0 ? '+' : '') + l3.individualDeviation.toFixed(1) + ' mg/dL/U';
+    document.getElementById('causal-adj').textContent = l3.proximalAdjustment.hasProxies ?
+        `${l3.proximalAdjustment.biasReduction.toFixed(0)}% reduction` : 'N/A';
+
+    // Update prediction chart
+    updatePredictionChart(l2.prediction.trajectory, rec.dose);
+
+    // Update prediction metrics
+    const adjustedPeak = l2.prediction.peak.glucose - rec.dose * 25;
+    document.getElementById('pred-peak').textContent = adjustedPeak.toFixed(0) + ' mg/dL';
+    document.getElementById('pred-time-peak').textContent = l2.prediction.peak.time + ' min';
+    document.getElementById('pred-return').textContent = l2.prediction.returnToTarget ?
+        l2.prediction.returnToTarget + ' min' : '> 3 hours';
+}
+
+function updateSafetyTier(elementId, tierResult) {
+    const el = document.getElementById(elementId);
+    const statusEl = el.querySelector('.tier-status');
+    const detailEl = el.querySelector('.tier-detail');
+
+    statusEl.textContent = tierResult.safe ? 'PASS' : 'FAIL';
+    statusEl.className = `tier-status ${tierResult.safe ? 'pass' : 'fail'}`;
+    detailEl.textContent = tierResult.reason;
+    el.className = `safety-tier ${tierResult.safe ? '' : 'failed'}`;
+}
+
+function updatePredictionChart(trajectory, dose) {
+    const ctx = document.getElementById('prediction-chart');
     if (!ctx) return;
 
-    AppState.chart = new Chart(ctx, {
+    // Adjust trajectory for insulin effect
+    const adjustedTrajectory = trajectory.map(p => ({
+        time: p.time,
+        glucose: Math.max(40, p.glucose - dose * 25 * Math.min(1, p.time / 60))
+    }));
+
+    if (AppState.predictionChart) {
+        AppState.predictionChart.destroy();
+    }
+
+    AppState.predictionChart = new Chart(ctx, {
         type: 'line',
         data: {
-            labels: [],
+            labels: adjustedTrajectory.map(p => p.time),
             datasets: [{
-                label: 'Glucose (mg/dL)',
-                data: [],
+                label: 'Predicted Glucose',
+                data: adjustedTrajectory.map(p => p.glucose),
                 borderColor: '#3b82f6',
                 backgroundColor: 'rgba(59, 130, 246, 0.1)',
                 fill: true,
                 tension: 0.3,
-                pointRadius: 0,
-                borderWidth: 2
+                pointRadius: 0
             }]
         },
         options: {
             responsive: true,
             maintainAspectRatio: false,
             plugins: {
-                legend: {
-                    display: false
-                },
-                tooltip: {
-                    mode: 'index',
-                    intersect: false,
-                    backgroundColor: 'rgba(15, 20, 25, 0.95)',
-                    titleColor: '#f4f4f5',
-                    bodyColor: '#9ca3af',
-                    borderColor: 'rgba(255, 255, 255, 0.1)',
-                    borderWidth: 1,
-                    padding: 12,
-                    displayColors: false,
-                    callbacks: {
-                        label: function (context) {
-                            return `${context.parsed.y.toFixed(1)} mg/dL`;
-                        }
-                    }
-                }
+                legend: { display: false }
             },
             scales: {
                 x: {
-                    display: true,
-                    title: {
-                        display: true,
-                        text: 'Time (hours)',
-                        color: '#6b7280',
-                        font: { size: 11, weight: 500 }
-                    },
-                    grid: {
-                        color: 'rgba(255, 255, 255, 0.05)',
-                        drawBorder: false
-                    },
-                    ticks: {
-                        color: '#6b7280',
-                        font: { size: 10 },
-                        maxTicksLimit: 12
-                    }
+                    title: { display: true, text: 'Time (min)', color: '#6b7280' },
+                    grid: { color: 'rgba(255,255,255,0.05)' },
+                    ticks: { color: '#6b7280' }
                 },
                 y: {
-                    display: true,
                     min: 40,
                     max: 300,
-                    title: {
-                        display: true,
-                        text: 'Glucose (mg/dL)',
-                        color: '#6b7280',
-                        font: { size: 11, weight: 500 }
-                    },
-                    grid: {
-                        color: 'rgba(255, 255, 255, 0.05)',
-                        drawBorder: false
-                    },
-                    ticks: {
-                        color: '#6b7280',
-                        font: { size: 10 }
-                    }
+                    title: { display: true, text: 'Glucose (mg/dL)', color: '#6b7280' },
+                    grid: { color: 'rgba(255,255,255,0.05)' },
+                    ticks: { color: '#6b7280' }
                 }
-            },
-            interaction: {
-                mode: 'nearest',
-                axis: 'x',
-                intersect: false
             }
         },
         plugins: [{
@@ -171,18 +546,217 @@ function initializeChart() {
                 const { ctx, chartArea, scales } = chart;
                 if (!chartArea) return;
 
-                // Draw target range (70-180)
-                const yTop = scales.y.getPixelForValue(180);
-                const yBottom = scales.y.getPixelForValue(70);
-
                 ctx.save();
-                ctx.fillStyle = 'rgba(16, 185, 129, 0.08)';
-                ctx.fillRect(chartArea.left, yTop, chartArea.right - chartArea.left, yBottom - yTop);
+                ctx.fillStyle = 'rgba(16, 185, 129, 0.1)';
+                const y180 = scales.y.getPixelForValue(180);
+                const y70 = scales.y.getPixelForValue(70);
+                ctx.fillRect(chartArea.left, y180, chartArea.right - chartArea.left, y70 - y180);
+                ctx.restore();
+            }
+        }]
+    });
+}
 
-                // Draw danger zone (<54)
-                const yDanger = scales.y.getPixelForValue(54);
-                ctx.fillStyle = 'rgba(239, 68, 68, 0.08)';
-                ctx.fillRect(chartArea.left, yDanger, chartArea.right - chartArea.left, chartArea.bottom - yDanger);
+// ============================================
+// Batch Simulation
+// ============================================
+
+async function runBatchSimulation() {
+    const patient = document.getElementById('sim-patient').value;
+    const duration = parseInt(document.getElementById('sim-duration').value);
+    const meals = document.getElementById('sim-meals').value;
+    const challenge = document.getElementById('sim-challenge').value;
+
+    const statusDisplay = document.getElementById('sim-status-display');
+    const chartContainer = document.getElementById('sim-chart-container');
+    const metricsDiv = document.getElementById('sim-metrics');
+
+    statusDisplay.innerHTML = '<p>Running simulation...</p>';
+    chartContainer.classList.add('hidden');
+    metricsDiv.classList.add('hidden');
+
+    // Simulate based on parameters
+    const results = await runSimulation(patient, duration, meals, challenge);
+
+    // Display results
+    displaySimulationResults(results);
+}
+
+async function runSimulation(patient, duration, meals, challenge) {
+    // Patient parameters
+    const patients = {
+        adult_avg: { weight: 75, tdi: 45 },
+        adult_high_ir: { weight: 85, tdi: 65 },
+        adult_sensitive: { weight: 70, tdi: 30 },
+        adolescent: { weight: 52, tdi: 32 },
+        child: { weight: 30, tdi: 16 }
+    };
+
+    const mealPlans = {
+        standard: [
+            { time: 0, carbs: 45 },
+            { time: 5, carbs: 70 },
+            { time: 11, carbs: 80 }
+        ],
+        high_carb: [
+            { time: 0, carbs: 60 },
+            { time: 5, carbs: 100 },
+            { time: 11, carbs: 120 }
+        ],
+        low_carb: [
+            { time: 0, carbs: 20 },
+            { time: 5, carbs: 30 },
+            { time: 11, carbs: 40 }
+        ],
+        irregular: [
+            { time: 2, carbs: 50 },
+            { time: 8, carbs: 60 }
+        ]
+    };
+
+    const p = patients[patient];
+    const mealPlan = mealPlans[meals];
+
+    // Simulate glucose trajectory
+    const trajectory = [];
+    let glucose = 100;
+    let decisions = 0;
+    let violations = 0;
+
+    const steps = duration * 12; // 5-min steps
+
+    for (let i = 0; i < steps; i++) {
+        const hour = i / 12;
+
+        // Check for meal
+        const meal = mealPlan.find(m => Math.abs(m.time - hour) < 0.1);
+        if (meal) {
+            const dose = meal.carbs / (500 / p.tdi);
+            glucose += meal.carbs * 4 - dose * 25;
+            decisions++;
+        }
+
+        // Apply challenge modifiers
+        let modifier = 1;
+        if (challenge === 'exercise' && hour >= 3 && hour <= 4) {
+            modifier = 0.7; // Drop glucose during exercise
+        } else if (challenge === 'stress') {
+            modifier = 1.15;
+        } else if (challenge === 'illness') {
+            modifier = 1.25;
+        } else if (challenge === 'dawn' && hour >= 4 && hour <= 7) {
+            modifier = 1.1;
+        }
+
+        // Natural glucose dynamics
+        glucose = glucose * 0.98 + 100 * 0.02; // Tend toward 100
+        glucose *= modifier;
+
+        // Add noise
+        glucose += (Math.random() - 0.5) * 10;
+
+        // Bounds
+        glucose = Math.max(50, Math.min(350, glucose));
+
+        // Safety check
+        if (glucose < 54) {
+            violations++;
+            glucose = 70; // Safety intervention
+        }
+
+        trajectory.push({ time: hour, glucose });
+
+        await new Promise(r => setTimeout(r, 5));
+    }
+
+    return { trajectory, decisions, violations, patient: p };
+}
+
+function displaySimulationResults(results) {
+    const statusDisplay = document.getElementById('sim-status-display');
+    const chartContainer = document.getElementById('sim-chart-container');
+    const metricsDiv = document.getElementById('sim-metrics');
+
+    statusDisplay.innerHTML = '<p>Simulation complete</p>';
+    chartContainer.classList.remove('hidden');
+    metricsDiv.classList.remove('hidden');
+
+    // Calculate metrics
+    const glucose = results.trajectory.map(p => p.glucose);
+    const n = glucose.length;
+
+    const tir = (glucose.filter(g => g >= 70 && g <= 180).length / n * 100).toFixed(1);
+    const tbr = (glucose.filter(g => g < 70).length / n * 100).toFixed(1);
+    const hypo = (glucose.filter(g => g < 54).length / n * 100).toFixed(1);
+    const tar = (glucose.filter(g => g > 180).length / n * 100).toFixed(1);
+    const mean = (glucose.reduce((a, b) => a + b, 0) / n).toFixed(1);
+    const cv = ((Math.sqrt(glucose.reduce((s, g) => s + Math.pow(g - mean, 2), 0) / n) / mean) * 100).toFixed(1);
+
+    document.getElementById('sim-tir').textContent = tir + '%';
+    document.getElementById('sim-tbr').textContent = tbr + '%';
+    document.getElementById('sim-hypo').textContent = hypo + '%';
+    document.getElementById('sim-tar').textContent = tar + '%';
+    document.getElementById('sim-mean').textContent = mean + ' mg/dL';
+    document.getElementById('sim-cv').textContent = cv + '%';
+    document.getElementById('sim-violations').textContent = results.violations;
+    document.getElementById('sim-decisions').textContent = results.decisions;
+
+    // Update chart
+    const ctx = document.getElementById('sim-chart');
+
+    if (AppState.simChart) {
+        AppState.simChart.destroy();
+    }
+
+    AppState.simChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: results.trajectory.map(p => p.time.toFixed(1)),
+            datasets: [{
+                label: 'Glucose',
+                data: results.trajectory.map(p => p.glucose),
+                borderColor: '#3b82f6',
+                backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                fill: true,
+                tension: 0.3,
+                pointRadius: 0
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: { legend: { display: false } },
+            scales: {
+                x: {
+                    title: { display: true, text: 'Time (hours)', color: '#6b7280' },
+                    grid: { color: 'rgba(255,255,255,0.05)' },
+                    ticks: { color: '#6b7280', maxTicksLimit: 12 }
+                },
+                y: {
+                    min: 40,
+                    max: 350,
+                    grid: { color: 'rgba(255,255,255,0.05)' },
+                    ticks: { color: '#6b7280' }
+                }
+            }
+        },
+        plugins: [{
+            id: 'ranges',
+            beforeDraw: (chart) => {
+                const { ctx, chartArea, scales } = chart;
+                if (!chartArea) return;
+                ctx.save();
+
+                // Target range
+                ctx.fillStyle = 'rgba(16, 185, 129, 0.1)';
+                const y180 = scales.y.getPixelForValue(180);
+                const y70 = scales.y.getPixelForValue(70);
+                ctx.fillRect(chartArea.left, y180, chartArea.right - chartArea.left, y70 - y180);
+
+                // Danger zone
+                ctx.fillStyle = 'rgba(239, 68, 68, 0.1)';
+                const y54 = scales.y.getPixelForValue(54);
+                ctx.fillRect(chartArea.left, y54, chartArea.right - chartArea.left, chartArea.bottom - y54);
 
                 ctx.restore();
             }
@@ -190,362 +764,56 @@ function initializeChart() {
     });
 }
 
-function updateChart(glucoseData) {
-    if (!AppState.chart || !glucoseData) return;
-
-    const labels = glucoseData.map(d => d.time.toFixed(1));
-    const values = glucoseData.map(d => d.value);
-
-    AppState.chart.data.labels = labels;
-    AppState.chart.data.datasets[0].data = values;
-    AppState.chart.update('none');
-}
-
 // ============================================
-// Simulation Configuration
+// Utility Functions
 // ============================================
 
-function initializeSimulationConfig() {
-    // Meal protocol change handler
-    const mealProtocol = document.getElementById('meal-protocol');
-    const customMeals = document.getElementById('custom-meals');
+function updateSystemStatus(status) {
+    const dot = document.getElementById('system-status-dot');
+    const text = document.getElementById('system-status-text');
 
-    if (mealProtocol) {
-        mealProtocol.addEventListener('change', (e) => {
-            if (customMeals) {
-                customMeals.classList.toggle('hidden', e.target.value !== 'custom');
-            }
-        });
-    }
-
-    // Range input handlers
-    const rangeInputs = [
-        { id: 'initial-glucose', valueId: 'initial-glucose-value', format: (v) => `${v} mg/dL` },
-        { id: 'isf', valueId: 'isf-value', format: (v) => `${v} mg/dL per U` },
-        { id: 'cr', valueId: 'cr-value', format: (v) => `1:${v} (g/U)` }
-    ];
-
-    rangeInputs.forEach(({ id, valueId, format }) => {
-        const input = document.getElementById(id);
-        const valueDisplay = document.getElementById(valueId);
-
-        if (input && valueDisplay) {
-            input.addEventListener('input', (e) => {
-                valueDisplay.textContent = format(e.target.value);
-            });
-        }
-    });
-}
-
-function getSimulationConfig() {
-    return {
-        patientProfile: document.getElementById('patient-profile')?.value || 'adult_avg',
-        duration: parseInt(document.getElementById('sim-duration')?.value || 24),
-        samplingInterval: parseInt(document.getElementById('sampling-interval')?.value || 5),
-        mealProtocol: document.getElementById('meal-protocol')?.value || 'standard',
-        initialGlucose: parseInt(document.getElementById('initial-glucose')?.value || 120),
-        isf: parseInt(document.getElementById('isf')?.value || 50),
-        cr: parseInt(document.getElementById('cr')?.value || 12),
-        activityScenario: document.getElementById('activity-scenario')?.value || 'none',
-        noiseModel: document.getElementById('noise-model')?.value || 'low',
-        enableL1: document.getElementById('enable-l1')?.checked ?? true,
-        enableL2: document.getElementById('enable-l2')?.checked ?? true,
-        enableL3: document.getElementById('enable-l3')?.checked ?? true,
-        enableL4: document.getElementById('enable-l4')?.checked ?? true,
-        // Custom meals
-        breakfastCarbs: parseInt(document.getElementById('breakfast-carbs')?.value || 45),
-        breakfastTime: parseTimeToMinutes(document.getElementById('breakfast-time')?.value || '07:00'),
-        lunchCarbs: parseInt(document.getElementById('lunch-carbs')?.value || 70),
-        lunchTime: parseTimeToMinutes(document.getElementById('lunch-time')?.value || '12:00'),
-        dinnerCarbs: parseInt(document.getElementById('dinner-carbs')?.value || 80),
-        dinnerTime: parseTimeToMinutes(document.getElementById('dinner-time')?.value || '19:00')
+    const states = {
+        ready: { class: 'ready', text: 'Ready for Input' },
+        processing: { class: 'processing', text: 'Processing...' },
+        complete: { class: 'complete', text: 'Complete' },
+        error: { class: 'error', text: 'Error' }
     };
+
+    const state = states[status] || states.ready;
+    dot.className = `status-dot ${state.class}`;
+    text.textContent = state.text;
 }
 
-function parseTimeToMinutes(timeStr) {
-    const [hours, minutes] = timeStr.split(':').map(Number);
-    return hours * 60 + minutes;
+function resetSystem() {
+    AppState.lastResults = null;
+    resetLayerOutputs();
+    document.getElementById('results-empty').classList.remove('hidden');
+    document.getElementById('results-data').classList.add('hidden');
+    updateSystemStatus('ready');
+    navigateToSection('input');
+    showToast('System reset', 'info');
 }
-
-// ============================================
-// Event Listeners
-// ============================================
-
-function initializeEventListeners() {
-    // Run simulation button
-    const runBtn = document.getElementById('run-simulation');
-    if (runBtn) {
-        runBtn.addEventListener('click', runSimulation);
-    }
-
-    // Emergency stop
-    const emergencyBtn = document.getElementById('emergency-stop');
-    if (emergencyBtn) {
-        emergencyBtn.addEventListener('click', emergencyStop);
-    }
-}
-
-// ============================================
-// Simulation Execution
-// ============================================
-
-async function runSimulation() {
-    if (AppState.simulation.running) {
-        showToast('Simulation already running', 'warning');
-        return;
-    }
-
-    const config = getSimulationConfig();
-    const simulator = new AEGISSimulator(config);
-
-    // Update UI state
-    AppState.simulation.running = true;
-    const runBtn = document.getElementById('run-simulation');
-    const statusEl = document.getElementById('sim-status');
-    const resultsContent = document.getElementById('results-content');
-    const logContainer = document.getElementById('execution-log');
-    const logContent = document.getElementById('log-content');
-
-    runBtn.disabled = true;
-    runBtn.textContent = 'Running...';
-    statusEl.textContent = 'Running';
-    statusEl.className = 'sim-status running';
-    logContainer.classList.remove('hidden');
-    logContent.innerHTML = '';
-
-    // Clear previous results
-    resultsContent.innerHTML = '<div class="loading-state"><p>Executing simulation...</p></div>';
-
-    try {
-        // Progress callback
-        const onProgress = (progress, layerStates) => {
-            // Update layer status indicators on dashboard
-            Object.entries(layerStates).forEach(([layer, state]) => {
-                const statusEl = document.getElementById(`l${layer.slice(1)}-status`);
-                if (statusEl) {
-                    statusEl.textContent = state.status;
-                    statusEl.className = `layer-status ${state.status === 'Verified' || state.status === 'Ready' ? 'safe' : 'active'}`;
-                }
-            });
-        };
-
-        // Log callback
-        const onLog = (entry) => {
-            const logEntry = document.createElement('div');
-            logEntry.className = `log-entry ${entry.type}`;
-
-            const timeStr = entry.time > 0 ? `[${(entry.time / 60).toFixed(1)}h]` : '[0.0h]';
-            logEntry.innerHTML = `<span class="log-time">${timeStr}</span> <span class="log-message">${entry.message}</span>`;
-
-            logContent.appendChild(logEntry);
-            logContent.scrollTop = logContent.scrollHeight;
-        };
-
-        // Run simulation
-        const results = await simulator.run(onProgress, onLog);
-        AppState.simulation.results = results;
-
-        // Update dashboard
-        updateDashboardFromResults(results);
-
-        // Display results
-        displayResults(results);
-
-        statusEl.textContent = 'Complete';
-        statusEl.className = 'sim-status complete';
-
-        showToast('Simulation completed successfully', 'success');
-
-    } catch (error) {
-        console.error('Simulation error:', error);
-        showToast('Simulation failed: ' + error.message, 'error');
-        statusEl.textContent = 'Error';
-        statusEl.className = 'sim-status';
-    } finally {
-        AppState.simulation.running = false;
-        runBtn.disabled = false;
-        runBtn.textContent = 'Run Simulation';
-    }
-}
-
-function displayResults(results) {
-    const content = document.getElementById('results-content');
-    const metrics = results.metrics;
-
-    content.innerHTML = `
-        <div class="results-summary">
-            <h4>Glycemic Outcomes</h4>
-            <div class="results-grid">
-                <div class="result-item">
-                    <span class="result-label">Time in Range (70-180)</span>
-                    <span class="result-value">${metrics.TIR}%</span>
-                </div>
-                <div class="result-item">
-                    <span class="result-label">Time Below 70</span>
-                    <span class="result-value ${parseFloat(metrics.TBR_70) > 4 ? 'warning' : ''}">${metrics.TBR_70}%</span>
-                </div>
-                <div class="result-item">
-                    <span class="result-label">Time Below 54 (Severe)</span>
-                    <span class="result-value ${parseFloat(metrics.TBR_54) > 0 ? 'danger' : 'success'}">${metrics.TBR_54}%</span>
-                </div>
-                <div class="result-item">
-                    <span class="result-label">Time Above 180</span>
-                    <span class="result-value">${metrics.TAR_180}%</span>
-                </div>
-                <div class="result-item">
-                    <span class="result-label">Mean Glucose</span>
-                    <span class="result-value">${metrics.mean} mg/dL</span>
-                </div>
-                <div class="result-item">
-                    <span class="result-label">Coefficient of Variation</span>
-                    <span class="result-value">${metrics.CV}%</span>
-                </div>
-                <div class="result-item">
-                    <span class="result-label">GMI (Est. A1C)</span>
-                    <span class="result-value">${metrics.GMI}%</span>
-                </div>
-                <div class="result-item">
-                    <span class="result-label">Range (Min - Max)</span>
-                    <span class="result-value">${metrics.min} - ${metrics.max}</span>
-                </div>
-            </div>
-            
-            <h4>Safety Metrics</h4>
-            <div class="results-grid">
-                <div class="result-item">
-                    <span class="result-label">Severe Hypoglycemia Events</span>
-                    <span class="result-value ${parseFloat(metrics.TBR_54) > 0 ? 'danger' : 'success'}">${parseFloat(metrics.TBR_54) > 0 ? 'Detected' : 'None'}</span>
-                </div>
-                <div class="result-item">
-                    <span class="result-label">Seldonian Compliance</span>
-                    <span class="result-value success">${metrics.seldonianCompliance}%</span>
-                </div>
-            </div>
-        </div>
-    `;
-
-    // Add styles for results
-    const style = document.createElement('style');
-    style.textContent = `
-        .results-summary h4 {
-            font-size: 0.875rem;
-            font-weight: 600;
-            margin-bottom: 1rem;
-            margin-top: 1.5rem;
-        }
-        .results-summary h4:first-child {
-            margin-top: 0;
-        }
-        .results-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 0.75rem;
-        }
-        .result-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0.75rem;
-            background-color: var(--color-bg-tertiary);
-            border-radius: var(--radius-md);
-        }
-        .result-label {
-            font-size: 0.75rem;
-            color: var(--color-text-secondary);
-        }
-        .result-value {
-            font-size: 0.875rem;
-            font-weight: 600;
-            font-family: var(--font-mono);
-        }
-        .result-value.success {
-            color: var(--color-success);
-        }
-        .result-value.warning {
-            color: var(--color-warning);
-        }
-        .result-value.danger {
-            color: var(--color-danger);
-        }
-        .loading-state {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 3rem;
-            color: var(--color-text-muted);
-        }
-    `;
-
-    if (!document.getElementById('results-styles')) {
-        style.id = 'results-styles';
-        document.head.appendChild(style);
-    }
-}
-
-function updateDashboardFromResults(results) {
-    // Update main metrics
-    document.getElementById('current-glucose').textContent =
-        results.glucoseTrace.length > 0
-            ? results.glucoseTrace[results.glucoseTrace.length - 1].value.toFixed(0)
-            : '--';
-
-    document.getElementById('tir-value').textContent = results.metrics.TIR;
-    document.getElementById('safety-score').textContent = results.metrics.seldonianCompliance;
-    document.getElementById('hypo-value').textContent = results.metrics.TBR_54;
-
-    // Update trend
-    const trend = document.getElementById('glucose-trend');
-    if (results.glucoseTrace.length >= 2) {
-        const last = results.glucoseTrace[results.glucoseTrace.length - 1].value;
-        const prev = results.glucoseTrace[results.glucoseTrace.length - 2].value;
-        const change = last - prev;
-
-        if (change > 2) {
-            trend.querySelector('.trend-direction').textContent = 'Rising';
-        } else if (change < -2) {
-            trend.querySelector('.trend-direction').textContent = 'Falling';
-        } else {
-            trend.querySelector('.trend-direction').textContent = 'Stable';
-        }
-    }
-
-    // Update chart
-    updateChart(results.glucoseTrace);
-}
-
-function updateDashboardMetrics() {
-    // Set initial placeholder values
-    document.getElementById('current-glucose').textContent = '--';
-    document.getElementById('tir-value').textContent = '--';
-    document.getElementById('safety-score').textContent = '--';
-    document.getElementById('hypo-value').textContent = '--';
-}
-
-// ============================================
-// Emergency Stop
-// ============================================
 
 function emergencyStop() {
-    if (AppState.simulation.running) {
-        AppState.simulation.running = false;
-        showToast('Emergency stop activated - simulation halted', 'warning');
-    } else {
-        showToast('Emergency stop activated - all insulin suspended', 'warning');
-    }
+    AppState.processing = false;
+    updateSystemStatus('error');
+    showToast('Emergency stop activated - all insulin suspended', 'warning');
+}
 
-    // Update layer 5 status
-    const l5Status = document.getElementById('l5-status');
-    if (l5Status) {
-        l5Status.textContent = 'EMERGENCY';
-        l5Status.className = 'layer-status';
-        l5Status.style.backgroundColor = 'var(--color-danger-subtle)';
-        l5Status.style.color = 'var(--color-danger)';
+function approveRecommendation() {
+    showToast('Recommendation approved - administering ' + AppState.lastResults.recommendation.dose.toFixed(1) + ' U', 'success');
+}
+
+function modifyDose() {
+    const newDose = prompt('Enter modified dose (Units):', AppState.lastResults.recommendation.dose.toFixed(1));
+    if (newDose !== null) {
+        showToast('Modified dose: ' + parseFloat(newDose).toFixed(1) + ' U', 'info');
     }
 }
 
-// ============================================
-// Toast Notifications
-// ============================================
+function rejectRecommendation() {
+    showToast('Recommendation rejected - manual override active', 'warning');
+}
 
 function showToast(message, type = 'info') {
     const container = document.getElementById('toast-container');
